@@ -1,33 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Jockey+One&family=Libre+Barcode+39&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+html,
+body,
+#root,
+.app {
+    height: 100%;
+    width: 100%;
+    font-family: "Jaro", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    background-color: theme('colors.dark-bg'); /* Set background color to dark */
+    color: theme('colors.text-primary'); /* Set text color to primary */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@supports (-webkit-touch-callout: none) {
+  .h-screen {
+    height: -webkit-fill-available;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.shadow-custom {
+    background: linear-gradient(to top, rgba(215, 75, 15, 0.15) 10%, rgba(13, 13, 13, 0));
   }
-}
+
+.shadow-glow {
+    box-shadow: 0 4px 8px rgba(215, 75, 15, 0.95);
+  }
