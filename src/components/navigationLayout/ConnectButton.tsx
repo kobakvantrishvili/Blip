@@ -1,10 +1,10 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 
-interface ConnectButtonProps {
+type ConnectButtonProps = {
   className?: string;
   children?: React.ReactNode;
-}
+};
 
 const ConnectButton: React.FC<ConnectButtonProps> = ({ className, children }) => {
   const { open } = useWeb3Modal();
