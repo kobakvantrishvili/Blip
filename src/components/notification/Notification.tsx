@@ -5,7 +5,7 @@ type NotificationbarProps = {
   children: React.ReactNode;
 };
 
-const Notificationbar: React.FC<NotificationbarProps> = ({ children }) => {
+const Notification: React.FC<NotificationbarProps> = ({ children }) => {
   return (
     <motion.div
       key={1}
@@ -20,4 +20,4 @@ const Notificationbar: React.FC<NotificationbarProps> = ({ children }) => {
   );
 };
 
-export default Notificationbar;
+export default Notification;

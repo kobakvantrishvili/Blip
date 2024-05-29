@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Navbar from "@/components/nav/navbar/Navbar";
 import Sidebar from "@/components/nav/sidebar/Sidebar";
-import Notificationbar from "@/components/notificationBar/NotificationBar";
+import Notification from "@/components/notification/Notification";
 import { AnimatePresence } from "framer-motion";
 
-const NavigationLayout: React.FC = () => {
+const Nav: React.FC = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isMenuToggled, setIsMenuToggled] = useState(false);
 
@@ -19,11 +19,9 @@ const NavigationLayout: React.FC = () => {
         setIsCopied={setIsCopied}
       />
       {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}
-      <AnimatePresence mode="wait">
-        {isCopied && <Notificationbar>Copied to clipboard!</Notificationbar>}
-      </AnimatePresence>
+      <AnimatePresence>{isCopied && <Notification>Copied to clipboard!</Notification>}</AnimatePresence>
     </>
   );
 };
 
-export default NavigationLayout;
+export default Nav;

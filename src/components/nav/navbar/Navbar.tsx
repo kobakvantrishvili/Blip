@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { FiGlobe, FiLogOut, FiX, FiCheck } from "react-icons/fi";
 import { BsCopy } from "react-icons/bs";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
@@ -11,9 +12,9 @@ import UserMenuButton from "@/components/nav/UserMenuButton";
 import useEthBalance from "@/hooks/useEthBalance";
 import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
 import DropdownMenuItem from "@/components/shared/dropDownMenu/DropDownMenuItem";
-import { copyEthAddress } from "@/utils/copyEthAddress";
 import DropDownMenu from "@/components/shared/dropDownMenu/DropDownMenu";
-import { useEffect } from "react";
+import { copyEthAddress } from "@/utils/copyEthAddress";
+import { handleCopyClick } from "@/utils/handleCopyClick";
 
 type NavbarProps = {
   isMenuToggled: boolean;
@@ -25,6 +26,8 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopied, setIsCopied }) => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
+
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const balance = useEthBalance();
   const { address, isConnected } = useAccount();
@@ -113,7 +116,8 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
                       <DropDownMenu className={`w-42 bg-dark-bg border-dark-border`}>
                         <DropdownMenuItem
                           icon={isCopied ? FiCheck : BsCopy}
-                          onClick={() => copyEthAddress(address, setIsCopied)}
+                          onClick={() => handleCopyClick(address, setIsCopied, setIsDisabled)}
+                          className={isDisabled ? "disabled-class" : ""}
                         >
                           Copy Address
                         </DropdownMenuItem>

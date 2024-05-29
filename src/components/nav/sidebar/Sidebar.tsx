@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsCollection, BsQuestionCircle, BsSuitcaseLg } from "react-icons/bs";
 import { ImFeed } from "react-icons/im";
 import { FiLogOut } from "react-icons/fi";
@@ -10,6 +10,7 @@ import { copyEthAddress } from "@/utils/copyEthAddress";
 import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
 import SidebarItem from "@/components/nav/sidebar/SidebarItem";
 import useEthBalance from "@/hooks/useEthBalance";
+import { handleCopyClick } from "@/utils/handleCopyClick";
 
 type SidebarProps = {
   setIsCopied: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,6 +20,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setIsCopied }) => {
   const { address, isConnected } = useAccount();
   const balance = useEthBalance();
   const { disconnect } = useDisconnect();
+
+  const [isDisabled, setIsDisabled] = useState(false);
 
   return (
     <div className={`fixed flex flex-col left-0 z-20 top-16 bottom-0 w-full h-[calc(100dvh-4rem)] bg-dark-panel`}>
@@ -30,8 +33,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setIsCopied }) => {
           </ConnectButton>
         ) : (
           <UserMenuButton
-            className={`px-4 py-4 gap-2 rounded w-full`}
-            onClick={() => copyEthAddress(address, setIsCopied)}
+            className={`px-4 py-4 gap-2 rounded w-full ${isDisabled ?? "disabled-class"}`}
+            onClick={() => handleCopyClick(address, setIsCopied, setIsDisabled)}
           >
             <span>
               {address?.slice(0, 6)}...{address?.slice(-4)}
