@@ -18,11 +18,11 @@ const NavigationLayout: React.FC = () => {
         isCopied={isCopied}
         setIsCopied={setIsCopied}
       />
-      {/* {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}
-
+      {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}{" "}
+      {/* TODO: FIX BUG - MENU STAYS TOGGLED WHEN SCREEN EXPANDS  */}
       <AnimatePresence mode="wait">
         {isCopied && <Notificationbar>Copied to clipboard!</Notificationbar>}
-      </AnimatePresence> */}
+      </AnimatePresence>
     </>
   );
 };

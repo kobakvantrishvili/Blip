@@ -13,6 +13,7 @@ import EthBalanceDisplay from "@/components/navigationLayout/EthBalanceDisplay";
 import DropdownMenuItem from "@/components/shared/dropDownMenu/DropDownMenuItem";
 import { copyEthAddress } from "@/utils/copyEthAddress";
 import DropDownMenu from "@/components/shared/dropDownMenu/DropDownMenu";
+import { useEffect } from "react";
 
 type NavbarProps = {
   isMenuToggled: boolean;
@@ -28,6 +29,10 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
   const balance = useEthBalance();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+
+  useEffect(() => {
+    if (isAboveMediumScreens) setIsMenuToggled(false);
+  }, [isAboveMediumScreens]);
 
   return (
     <nav className={`relative`}>
