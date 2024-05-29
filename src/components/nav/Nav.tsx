@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/components/navigationLayout/navbar/Navbar";
-import Sidebar from "@/components/navigationLayout/sidebar/Sidebar";
+import Navbar from "@/components/nav/navbar/Navbar";
+import Sidebar from "@/components/nav/sidebar/Sidebar";
 import Notificationbar from "@/components/notificationBar/NotificationBar";
 import { AnimatePresence } from "framer-motion";
 
@@ -18,8 +18,7 @@ const NavigationLayout: React.FC = () => {
         isCopied={isCopied}
         setIsCopied={setIsCopied}
       />
-      {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}{" "}
-      {/* TODO: FIX BUG - MENU STAYS TOGGLED WHEN SCREEN EXPANDS  */}
+      {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}
       <AnimatePresence mode="wait">
         {isCopied && <Notificationbar>Copied to clipboard!</Notificationbar>}
       </AnimatePresence>

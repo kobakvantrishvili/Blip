@@ -4,11 +4,11 @@ import { ImFeed } from "react-icons/im";
 import { FiLogOut } from "react-icons/fi";
 import { useAccount, useDisconnect } from "wagmi";
 
-import ConnectButton from "@/components/navigationLayout/ConnectButton";
-import UserMenuButton from "@/components/navigationLayout/UserMenuButton";
+import ConnectButton from "@/components/nav/ConnectButton";
+import UserMenuButton from "@/components/nav/UserMenuButton";
 import { copyEthAddress } from "@/utils/copyEthAddress";
-import EthBalanceDisplay from "@/components/navigationLayout/EthBalanceDisplay";
-import SidebarItem from "@/components/navigationLayout/sidebar/SidebarItem";
+import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
+import SidebarItem from "@/components/nav/sidebar/SidebarItem";
 import useEthBalance from "@/hooks/useEthBalance";
 
 type SidebarProps = {

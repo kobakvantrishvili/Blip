@@ -5,11 +5,11 @@ import { useAccount, useDisconnect } from "wagmi";
 
 import Link from "@/components/shared/Link";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import SearchBar from "@/components/navigationLayout/navbar/SearchBar";
-import ConnectButton from "@/components/navigationLayout/ConnectButton";
-import UserMenuButton from "@/components/navigationLayout/UserMenuButton";
+import SearchBar from "@/components/nav/navbar/SearchBar";
+import ConnectButton from "@/components/nav/ConnectButton";
+import UserMenuButton from "@/components/nav/UserMenuButton";
 import useEthBalance from "@/hooks/useEthBalance";
-import EthBalanceDisplay from "@/components/navigationLayout/EthBalanceDisplay";
+import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
 import DropdownMenuItem from "@/components/shared/dropDownMenu/DropDownMenuItem";
 import { copyEthAddress } from "@/utils/copyEthAddress";
 import DropDownMenu from "@/components/shared/dropDownMenu/DropDownMenu";

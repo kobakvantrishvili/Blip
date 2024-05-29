@@ -1,9 +1,9 @@
-import NavigationLayout from "@/components/navigationLayout/NavigationLayout";
+import Nav from "@/components/nav/Nav";
 
 export default function Page() {
   return (
     <div className="bg-dark-bg scroll-smooth overscroll-contain">
-      <NavigationLayout />
+      <Nav />
     </div>
   );
 }
