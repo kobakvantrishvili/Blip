@@ -3,7 +3,7 @@ import { IconType } from "react-icons";
 
 type DropdownMenuItemProps = {
   children: React.ReactNode;
-  icon: IconType;
+  icon?: IconType;
   onClick?: () => void;
   className?: string;
 };
@@ -15,7 +15,7 @@ const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ children, icon: Ico
       onClick={onClick}
       disabled={className?.includes("disabled-class")}
     >
-      <Icon className={`text-text-tertiary text-2xl`} />
+      {Icon && <Icon className={`text-text-tertiary text-2xl`} />}
       {children}
     </button>
   );

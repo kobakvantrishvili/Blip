@@ -18,8 +18,8 @@ export default function RootLayout({
 }>) {
   const initialState = cookieToInitialState(config, headers().get("cookie"));
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Web3ModalProvider initialState={initialState}>
           <EthereumProvider>{children}</EthereumProvider>
         </Web3ModalProvider>

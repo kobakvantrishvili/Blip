@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiGlobe, FiLogOut, FiX, FiCheck } from "react-icons/fi";
+import { FiLogOut, FiX, FiCheck } from "react-icons/fi";
 import { BsCopy } from "react-icons/bs";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { useAccount, useDisconnect } from "wagmi";
@@ -7,13 +7,13 @@ import { useAccount, useDisconnect } from "wagmi";
 import Link from "@/components/shared/Link";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import SearchBar from "@/components/nav/navbar/SearchBar";
+import LanguageSelectButton from "@/components/nav/navbar/LanguageSelectButton";
 import ConnectButton from "@/components/nav/ConnectButton";
 import UserMenuButton from "@/components/nav/UserMenuButton";
 import useEthBalance from "@/hooks/useEthBalance";
 import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
 import DropdownMenuItem from "@/components/shared/dropDownMenu/DropDownMenuItem";
 import DropDownMenu from "@/components/shared/dropDownMenu/DropDownMenu";
-import { copyEthAddress } from "@/utils/copyEthAddress";
 import { handleCopyClick } from "@/utils/handleCopyClick";
 
 type NavbarProps = {
@@ -27,11 +27,17 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
 
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("EN");
 
   const balance = useEthBalance();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+
+  // HAS TO BE GLOBAL ONCE I ACTUALLY INTEGRATE NEW LANGUAGE.
+  const handleLanguagePick = (language: string) => {
+    setSelectedLanguage(language);
+  };
 
   useEffect(() => {
     if (isAboveMediumScreens) setIsMenuToggled(false);
@@ -85,16 +91,23 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
         {/* RIGHT */}
         <div className={`flex items-center justify-end flex-1`}>
           <div className={`flex items-center`}>
-            <button
-              className={`group px-4 py-1 relative shadow-custom border border-dark-border hover:bg-dark-hover rounded-l ${
-                !isAboveMediumScreens && "rounded"
-              }`}
-            >
-              <FiGlobe className={`text-text-secondary group-hover:text-primary-accent text-2xl`} />
-              <div
-                className={`absolute inset-x-0 bottom-[-1px] h-[1px] bg-gradient-to-r from-secondary-accent via-primary-accent to-secondary-accent shadow-glow`}
-              ></div>
-            </button>
+            <div className={`relative group`}>
+              <LanguageSelectButton isAboveMediumScreens={isAboveMediumScreens} />
+              <DropDownMenu className={`bg-dark-bg border-dark-border w-14`}>
+                <DropdownMenuItem
+                  className={`justify-center ${selectedLanguage === "EN" ? "text-primary-accent" : ""}`}
+                  onClick={() => handleLanguagePick("EN")}
+                >
+                  EN
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className={`justify-center ${selectedLanguage === "FR" ? "text-primary-accent" : ""}`}
+                  onClick={() => handleLanguagePick("FR")}
+                >
+                  FR
+                </DropdownMenuItem>
+              </DropDownMenu>
+            </div>
             {isAboveMediumScreens && (
               <>
                 {!isConnected ? (
@@ -116,8 +129,8 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
                       <DropDownMenu className={`w-42 bg-dark-bg border-dark-border`}>
                         <DropdownMenuItem
                           icon={isCopied ? FiCheck : BsCopy}
-                          onClick={() => handleCopyClick(address, setIsCopied, setIsDisabled)}
-                          className={isDisabled ? "disabled-class" : ""}
+                          onClick={() => handleCopyClick(address, setIsCopied, setIsButtonDisabled)}
+                          className={isButtonDisabled ? "disabled-class" : ""}
                         >
                           Copy Address
                         </DropdownMenuItem>
