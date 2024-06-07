@@ -27,6 +27,7 @@ const fetchNftListings = async (collectionSlug: string, apiKey: string, limit: n
     //so if we supply next, we are adding a new property to params.
   });
 
+  const url = `https://api.opensea.io/api/v2/listings/collection/${collectionSlug}/best?${params}`;
   const options = {
     method: "GET",
     headers: {
@@ -34,8 +35,6 @@ const fetchNftListings = async (collectionSlug: string, apiKey: string, limit: n
       "x-api-key": apiKey,
     },
   };
-
-  const url = `https://api.opensea.io/api/v2/listings/collection/${collectionSlug}/best?${params}`;
 
   try {
     const response = await fetch(url, options);
@@ -102,12 +101,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await fetchNftListings(collectionSlug, apiKey, parsedLimit, next as string);
+    const data = await response.json();
 
     if (response.status === 200) {
-      const data = await response.json();
       res.status(200).json(processNftListings(data, chosenOrderType));
     } else {
-      res.status(response.status).json({ error: response.statusText });
+      res.status(response.status).json({ error: data });
     }
   } catch (err) {
     if (err instanceof Error) {
