@@ -14,7 +14,7 @@ import useEthBalance from "@/hooks/useEthBalance";
 import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
 import DropdownMenuItem from "@/components/shared/dropDownMenu/DropDownMenuItem";
 import DropDownMenu from "@/components/shared/dropDownMenu/DropDownMenu";
-import { handleCopyClick } from "@/utils/handleCopyClick";
+import { handleCopy } from "@/utils/handleCopy";
 
 type NavbarProps = {
   isMenuToggled: boolean;
@@ -44,9 +44,9 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
   }, [isAboveMediumScreens]);
 
   return (
-    <nav className={`relative`}>
+    <nav className={`fixed top-0 left-0 w-full`}>
       <div
-        className={`bg-dark-bg text-text-primary flex items-center fixed z-30 justify-between w-full h-16 m-0 px-6 border-b border-dark-border flex-row gap-2`}
+        className={`bg-dark-bg text-text-primary flex items-center fixed z-50 justify-between w-full h-16 m-0 px-6 border-b border-dark-border flex-row gap-2`}
       >
         {/* LEFT */}
         {isAboveMediumScreens ? (
@@ -129,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
                       <DropDownMenu className={`w-42 bg-dark-bg border-dark-border`}>
                         <DropdownMenuItem
                           icon={isCopied ? FiCheck : BsCopy}
-                          onClick={() => handleCopyClick(address, setIsCopied, setIsButtonDisabled)}
+                          onClick={() => handleCopy({ address, setIsCopied, setIsDisabled: setIsButtonDisabled })}
                           className={isButtonDisabled ? "disabled-class" : ""}
                         >
                           Copy Address
@@ -152,13 +152,13 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
       </div>
 
       {/* SEARCH BAR RELOCATION */}
-      {!isAboveLargeScreens && (
+      {/* {!isAboveLargeScreens && (
         <div
-          className={`bg-dark-bg text-text-primary fixed top-16 flex items-center w-full h-10 m-0 px-6 border-b border-dark-border flex-row gap-2 z-10`}
+          className={`bg-dark-bg text-text-primary fixed top-16 flex items-center w-full h-10 m-0 px-6 border-b border-dark-border flex-row gap-2 z-40`}
         >
           <SearchBar className="w-full h-full" barWidth="w-full" />
         </div>
-      )}
+      )} */}
     </nav>
   );
 };

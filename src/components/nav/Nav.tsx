@@ -6,10 +6,12 @@ import Sidebar from "@/components/nav/sidebar/Sidebar";
 import Notification from "@/components/notification/Notification";
 import { AnimatePresence } from "framer-motion";
 import TestComponent from "./TestComponent";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 const Nav: React.FC = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isMenuToggled, setIsMenuToggled] = useState(false);
+  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
 
   return (
     <>
@@ -20,8 +22,11 @@ const Nav: React.FC = () => {
         setIsCopied={setIsCopied}
       />
       {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}
-      <AnimatePresence>{isCopied && <Notification>Copied to clipboard!</Notification>}</AnimatePresence>
-      <TestComponent />
+      {!isAboveMediumScreens && (
+        <AnimatePresence>{isCopied && <Notification>Copied to clipboard!</Notification>}</AnimatePresence>
+      )}
+
+      {/* <TestComponent /> */}
     </>
   );
 };

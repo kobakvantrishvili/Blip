@@ -6,11 +6,10 @@ import { useAccount, useDisconnect } from "wagmi";
 
 import ConnectButton from "@/components/nav/ConnectButton";
 import UserMenuButton from "@/components/nav/UserMenuButton";
-import { copyEthAddress } from "@/utils/copyEthAddress";
+import { handleCopy } from "@/utils/handleCopy";
 import EthBalanceDisplay from "@/components/nav/EthBalanceDisplay";
 import SidebarItem from "@/components/nav/sidebar/SidebarItem";
 import useEthBalance from "@/hooks/useEthBalance";
-import { handleCopyClick } from "@/utils/handleCopyClick";
 
 type SidebarProps = {
   setIsCopied: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,8 +32,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setIsCopied }) => {
           </ConnectButton>
         ) : (
           <UserMenuButton
-            className={`px-4 py-4 gap-2 rounded w-full ${isDisabled ?? "disabled-class"}`}
-            onClick={() => handleCopyClick(address, setIsCopied, setIsDisabled)}
+            className={`px-4 py-4 gap-2 rounded w-full ${isDisabled ? "disabled-class" : ""}`}
+            onClick={() => handleCopy({ address, setIsCopied, setIsDisabled })}
           >
             <span>
               {address?.slice(0, 6)}...{address?.slice(-4)}

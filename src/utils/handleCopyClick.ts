@@ -1,15 +1,6 @@
-import { copyEthAddress } from "@/utils/copyEthAddress";
-
-export const handleCopyClick = (
-  address: string | undefined,
-  setIsCopied: (value: boolean) => void,
-  setIsDisabled: (value: boolean) => void
-) => {
-  if (address) {
-    copyEthAddress(address, setIsCopied);
-    setIsDisabled(true);
-    setTimeout(() => {
-      setIsDisabled(false);
-    }, 1500);
+export const handleCopyClick = (str: string | undefined): Promise<void> => {
+  if (str) {
+    return navigator.clipboard.writeText(str);
   }
+  return Promise.reject("String is undefined");
 };
