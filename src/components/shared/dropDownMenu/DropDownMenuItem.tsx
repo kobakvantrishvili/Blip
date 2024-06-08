@@ -11,7 +11,7 @@ type DropdownMenuItemProps = {
 const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ children, icon: Icon, className = "", onClick }) => {
   return (
     <button
-      className={`w-full px-4 py-2 text-left text-text-secondary hover:bg-dark-hover flex items-center gap-2 ${className}`}
+      className={`w-full px-4 py-2 text-left hover:bg-dark-hover flex items-center gap-2 ${className}`}
       onClick={onClick}
       disabled={className?.includes("disabled-class")}
     >

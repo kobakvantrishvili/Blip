@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
-  // HAS TO BE GLOBAL ONCE I ACTUALLY INTEGRATE NEW LANGUAGE.
+  //TODO: HAS TO BE GLOBAL ONCE I ACTUALLY INTEGRATE NEW LANGUAGE.
   const handleLanguagePick = (language: string) => {
     setSelectedLanguage(language);
   };
@@ -95,13 +95,17 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
               <LanguageSelectButton isAboveMediumScreens={isAboveMediumScreens} />
               <DropDownMenu className={`bg-dark-bg border-dark-border w-14`}>
                 <DropdownMenuItem
-                  className={`justify-center ${selectedLanguage === "EN" ? "text-primary-accent" : ""}`}
+                  className={`justify-center ${
+                    selectedLanguage === "EN" ? "text-primary-accent" : "text-text-secondary"
+                  }`}
                   onClick={() => handleLanguagePick("EN")}
                 >
                   EN
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className={`justify-center ${selectedLanguage === "FR" ? "text-primary-accent" : ""}`}
+                  className={`justify-center ${
+                    selectedLanguage === "FR" ? "text-primary-accent" : "text-text-secondary"
+                  }`}
                   onClick={() => handleLanguagePick("FR")}
                 >
                   FR
@@ -130,14 +134,14 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
                         <DropdownMenuItem
                           icon={isCopied ? FiCheck : BsCopy}
                           onClick={() => handleCopy({ address, setIsCopied, setIsDisabled: setIsButtonDisabled })}
-                          className={isButtonDisabled ? "disabled-class" : ""}
+                          className={`text-text-secondary ${isButtonDisabled ? "disabled-class" : ""}`}
                         >
                           Copy Address
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           icon={FiLogOut}
                           onClick={() => disconnect()}
-                          className="border-b border-dark-border"
+                          className="text-text-secondary border-b border-dark-border"
                         >
                           Disconnect
                         </DropdownMenuItem>
