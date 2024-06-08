@@ -1,4 +1,4 @@
-import { fetchNftCollection } from "@/services/external/fetchNftCollection";
+import { fetchNftCollectionStats } from "@/services/external/fetchNftCollectionStats";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
 
   try {
-    const response = await fetchNftCollection(collectionSlug, apiKey);
+    const response = await fetchNftCollectionStats(collectionSlug as string, apiKey);
     const data = await response.json();
 
     if (response.status === 200) {
