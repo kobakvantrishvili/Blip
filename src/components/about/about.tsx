@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { BsCopy, BsTwitterX, BsInstagram, BsDiscord } from "react-icons/bs";
-import { MdOutlineWebAsset } from "react-icons/md";
+import { BsCopy, BsTwitterX, BsInstagram, BsDiscord, BsGlobe2 } from "react-icons/bs";
 import { FiCheck } from "react-icons/fi";
 import { LiaEthereum } from "react-icons/lia";
 
@@ -20,14 +19,14 @@ const About = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  var collectionSlug: string = "mutant-ape-yacht-club";
+  var collectionSlug: string = "pudgypenguins";
   var floorPrice = collectionStats?.total.floor_price ?? "-";
   var topBid: any = "-";
-  var oneDayVolume = collectionStats?.intervals.find((x) => x.interval === "one_day")?.volume ?? "-";
-  var sevenDayVolume = collectionStats?.intervals.find((x) => x.interval === "seven_day")?.volume ?? "-";
+  var oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume ?? "-";
+  var sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume ?? "-";
   var totalVolume = collectionStats?.total.volume ?? "-";
   var owners = collectionStats?.total?.num_owners ?? 0;
-  var royalty = collection?.fees[0]?.fee ?? "-";
+  var royalty = collection?.fees?.find((x) => x.required == true)?.fee ?? "-";
   var totalSupply = collection?.total_supply ?? 0;
   var ownershipPercentage = Math.round((totalSupply != 0 ? owners / totalSupply : 0) * 100);
 
@@ -44,7 +43,7 @@ const About = () => {
       unsubscribeItemSold?.();
       //unsubscribeCollectionOffer?.();
     };
-  }, []);
+  }, [collectionSlug, openseaClient]);
 
   const fetchNftCollection = async () => {
     try {
@@ -92,26 +91,34 @@ const About = () => {
             >
               {isCopied ? <FiCheck /> : <BsCopy />}
             </Button>
-            <Link
-              target="_blank"
-              href={`https://twitter.com/${collection?.twitter_username}`}
-              className={`text-text-secondary  hover:text-text-primary text-l`}
-            >
-              <BsTwitterX />
-            </Link>
-            <Link
-              target="_blank"
-              href={`https://www.instagram.com/${collection?.instagram_username}`}
-              className={`text-text-secondary  hover:text-text-primary text-l`}
-            >
-              <BsInstagram />
-            </Link>
-            <Link target="_blank" href={`${collection?.discord_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
-              <BsDiscord />
-            </Link>
-            <Link target="_blank" href={`${collection?.project_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
-              <MdOutlineWebAsset />
-            </Link>
+            {collection?.twitter_username && (
+              <Link
+                target="_blank"
+                href={`https://twitter.com/${collection?.twitter_username}`}
+                className={`text-text-secondary  hover:text-text-primary text-l`}
+              >
+                <BsTwitterX />
+              </Link>
+            )}
+            {collection?.instagram_username && (
+              <Link
+                target="_blank"
+                href={`https://www.instagram.com/${collection?.instagram_username}`}
+                className={`text-text-secondary  hover:text-text-primary text-l`}
+              >
+                <BsInstagram />
+              </Link>
+            )}
+            {collection?.discord_url && (
+              <Link target="_blank" href={`${collection?.discord_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
+                <BsDiscord />
+              </Link>
+            )}
+            {collection?.project_url && (
+              <Link target="_blank" href={`${collection?.project_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
+                <BsGlobe2 />
+              </Link>
+            )}
           </div>
         </div>
       </div>
