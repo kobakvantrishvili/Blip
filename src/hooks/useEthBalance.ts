@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ethers, formatEther } from "ethers";
+import { formatEther } from "ethers";
 import { useAccount } from "wagmi";
 import { useEthereumProvider } from "@/context/EthereumProvider";
 

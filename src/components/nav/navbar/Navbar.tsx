@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
 
   useEffect(() => {
     if (isAboveMediumScreens) setIsMenuToggled(false);
-  }, [isAboveMediumScreens]);
+  }, [isAboveMediumScreens, setIsMenuToggled]);
 
   return (
     <nav className={`fixed top-0 left-0 w-full`}>
@@ -70,9 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
           <div className={`flex items-center justify-start flex-1`}>
             <button onClick={() => setIsMenuToggled(!isMenuToggled)} className="group py-1 px-1">
               {!isMenuToggled ? (
-                <HiOutlineMenuAlt1
-                  className={`text-text-secondary group-hover:text-primary-accent cursor-pointer text-2xl`}
-                />
+                <HiOutlineMenuAlt1 className={`text-text-secondary group-hover:text-primary-accent cursor-pointer text-2xl`} />
               ) : (
                 <FiX className={`text-text-secondary group-hover:text-primary-accent cursor-pointer text-2xl`} />
               )}
@@ -95,17 +93,13 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
               <LanguageSelectButton isAboveMediumScreens={isAboveMediumScreens} />
               <DropDownMenu className={`bg-dark-bg border-dark-border w-14`}>
                 <DropdownMenuItem
-                  className={`justify-center ${
-                    selectedLanguage === "EN" ? "text-primary-accent" : "text-text-secondary"
-                  }`}
+                  className={`justify-center ${selectedLanguage === "EN" ? "text-primary-accent" : "text-text-secondary"}`}
                   onClick={() => handleLanguagePick("EN")}
                 >
                   EN
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className={`justify-center ${
-                    selectedLanguage === "FR" ? "text-primary-accent" : "text-text-secondary"
-                  }`}
+                  className={`justify-center ${selectedLanguage === "FR" ? "text-primary-accent" : "text-text-secondary"}`}
                   onClick={() => handleLanguagePick("FR")}
                 >
                   FR

@@ -1,4 +1,5 @@
-import { useWeb3Modal } from "@web3modal/wagmi/react";
+import React from "react";
+import { web3ModalClient } from "@/services/web3ModalClient";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 
 type ConnectButtonProps = {
@@ -7,11 +8,18 @@ type ConnectButtonProps = {
 };
 
 const ConnectButton: React.FC<ConnectButtonProps> = ({ className, children }) => {
-  const { open } = useWeb3Modal();
+  const handleConnect = async () => {
+    try {
+      await web3ModalClient.open();
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+    }
+  };
+
   return (
     <button
       className={`bg-tertiary-accent text-text-dark hover:bg-white focus:outline-none flex items-center justify-center ${className}`}
-      onClick={() => open()}
+      onClick={handleConnect}
     >
       <MdOutlineAccountBalanceWallet className={`text-text-dark text-2xl`} />
       {children}

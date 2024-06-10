@@ -1,4 +1,4 @@
-import { NftListing } from "@/services/models/NftListing";
+import { NftListing } from "@/services/models/types";
 
 const processNftListings = (data: any, orderType: number) => {
   const listings: NftListing[] = [];

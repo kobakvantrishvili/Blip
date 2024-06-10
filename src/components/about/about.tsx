@@ -1,14 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BsCopy, BsTwitterX, BsInstagram, BsDiscord } from "react-icons/bs";
 import { MdOutlineWebAsset } from "react-icons/md";
 import { FiCheck } from "react-icons/fi";
+import { LiaEthereum } from "react-icons/lia";
+
 import Link from "@/components/shared/Link";
 import { handleCopy } from "@/utils/handleCopy";
 import Button from "@/components/shared/Button";
-import openseaClient from "@/services/openseaClient";
+import { openseaClient } from "@/services/openseaClient";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
+import Stat from "@/components/about/Stat";
 
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
@@ -16,30 +20,35 @@ const About = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
+  var collectionSlug: string = "mutant-ape-yacht-club";
+  var floorPrice = collectionStats?.total.floor_price ?? "-";
+  var topBid: any = "-";
+  var oneDayVolume = collectionStats?.intervals.find((x) => x.interval === "one_day")?.volume ?? "-";
+  var sevenDayVolume = collectionStats?.intervals.find((x) => x.interval === "seven_day")?.volume ?? "-";
+  var totalVolume = collectionStats?.total.volume ?? "-";
+  var owners = collectionStats?.total?.num_owners ?? 0;
+  var royalty = collection?.fees[0]?.fee ?? "-";
+  var totalSupply = collection?.total_supply ?? 0;
+  var ownershipPercentage = Math.round((totalSupply != 0 ? owners / totalSupply : 0) * 100);
+
   useEffect(() => {
     fetchNftCollection();
     fetchNftCollectionStats();
 
-    const unsubscribeItemListed = openseaClient.onItemListed(
-      "pudgypenguins",
-      async () => await fetchNftCollectionStats()
-    );
-    const unsubscribeItemSold = openseaClient.onItemSold("pudgypenguins", async () => await fetchNftCollectionStats());
-    const unsubscribeCollectionOffer = openseaClient.onCollectionOffer(
-      "pudgypenguins",
-      async () => await fetchNftCollectionStats()
-    );
+    const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, async () => await fetchNftCollectionStats());
+    const unsubscribeItemSold = openseaClient?.onItemSold(collectionSlug, async () => await fetchNftCollectionStats());
+    //const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, async () => await fetchNftCollectionStats());
 
     return () => {
-      unsubscribeItemListed();
-      unsubscribeItemSold();
-      unsubscribeCollectionOffer();
+      unsubscribeItemListed?.();
+      unsubscribeItemSold?.();
+      //unsubscribeCollectionOffer?.();
     };
   }, []);
 
   const fetchNftCollection = async () => {
     try {
-      const response = await fetch("/api/getNftCollection?collectionSlug=pudgypenguins");
+      const response = await fetch(`/api/getNftCollection?collectionSlug=${collectionSlug}`);
       const data: NftCollection = await response.json();
       setCollection(data);
     } catch (error) {
@@ -49,7 +58,7 @@ const About = () => {
 
   const fetchNftCollectionStats = async () => {
     try {
-      const response = await fetch("/api/getNftCollectionStats?collectionSlug=pudgypenguins");
+      const response = await fetch(`/api/getNftCollectionStats?collectionSlug=${collectionSlug}`);
       const data: NftCollectionStats = await response.json();
       setCollectionStats(data);
     } catch (error) {
@@ -58,14 +67,18 @@ const About = () => {
   };
 
   return (
-    <div className={`flex items-center mt-16 top-16 px-6 border-b border-dark-border h-[84px] w-full`}>
+    <div className={`flex items-center mt-16 top-16 px-6 border-b border-dark-border h-[84px] w-full gap-2 font-jockey`}>
       {/* TITLE LAYOUT */}
-      <div className={`flex items-center justify-start gap-4`}>
-        {collection?.image_url && (
-          <img src={collection?.image_url} alt="NFT Collection" className="w-14 h-14 rounded-full" />
-        )}
-        <div className={`flex flex-col gap-2`}>
-          <p className={`text-2xl font-jockey tracking-widest`}>{collection?.name}</p>
+      <div className={`flex w-1/4 items-center justify-start gap-4`}>
+        <Image
+          src={collection?.image_url || "/default-image.jpg"}
+          alt={`NFT Collection ${collection?.name}'s Image`}
+          width={56}
+          height={56}
+          className="w-14 h-14 rounded-full object-cover"
+        />
+        <div className={`flex flex-col gap-2 w-3/4`}>
+          <p className={`text-2xl tracking-widest overflow-hidden whitespace-nowrap overflow-ellipsis`}>{collection?.name}</p>
           <div className={`flex flex-row flex-start gap-[10px]`}>
             <Button
               onClick={() =>
@@ -93,29 +106,27 @@ const About = () => {
             >
               <BsInstagram />
             </Link>
-            <Link
-              target="_blank"
-              href={`${collection?.discord_url}`}
-              className={`text-text-secondary  hover:text-text-primary text-l`}
-            >
+            <Link target="_blank" href={`${collection?.discord_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
               <BsDiscord />
             </Link>
-            <Link
-              target="_blank"
-              href={`${collection?.project_url}`}
-              className={`text-text-secondary  hover:text-text-primary text-l`}
-            >
+            <Link target="_blank" href={`${collection?.project_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
               <MdOutlineWebAsset />
             </Link>
           </div>
         </div>
       </div>
       {/* STATS LAYOUT */}
-      <div className={`flex items-center justify-end flex-1`}>
-        <div className={`flex flex-col justify-center`}>
-          <p className={`text-base font-jockey text-text-secondary`}>FLOOR PRICE</p>
-          <div className={`text-lg font-jockey text-text-primary`}>{collectionStats?.total.floor_price} eth</div>
-        </div>
+      <div className={`flex flex-1 items-center justify-end`}>
+        <Stat name="FLOOR PRICE" stat={floorPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+        <Stat name="TOP BID" stat={topBid.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+        <Stat name={`1D CHANGE`} stat="-%" />
+        <Stat name={`7D CHANGE`} stat="-%" />
+        <Stat name={`1D VOLUME`} stat={oneDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+        <Stat name={`7D VOLUME`} stat={sevenDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+        <Stat name="TOTAL VOLUME" stat={totalVolume.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+        <Stat name="OWNERS" stat={`${owners}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`} />
+        <Stat name="SUPPLY" stat={totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 })} />
+        <Stat name="ROYALTY" stat={`${royalty}%`} />
       </div>
     </div>
   );

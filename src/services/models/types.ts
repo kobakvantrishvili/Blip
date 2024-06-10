@@ -1,11 +1,21 @@
 export type NftCollection = {
+  collection: string;
+  description: string;
   image_url: string;
   name: string;
+  owner: string;
   contracts: { address: string }[];
   twitter_username: string;
   instagram_username: string;
   discord_url: string;
   project_url: string;
+  fees: {
+    fee: number;
+    recipient: string;
+    required: boolean;
+  }[];
+  total_supply: number;
+  created_date: string;
 };
 
 export type NftCollectionStats = {
