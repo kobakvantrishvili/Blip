@@ -6,11 +6,11 @@ import { BsCopy, BsTwitterX, BsInstagram, BsDiscord, BsGlobe2 } from "react-icon
 import { FiCheck } from "react-icons/fi";
 import { LiaEthereum } from "react-icons/lia";
 
-import Link from "@/components/shared/Link";
 import { handleCopy } from "@/utils/handleCopy";
-import Button from "@/components/shared/Button";
 import { openseaClient } from "@/services/openseaClient";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
+import Link from "@/components/shared/Link";
+import Button from "@/components/shared/Button";
 import Stat from "@/components/about/Stat";
 
 const About = () => {
@@ -19,16 +19,16 @@ const About = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  var collectionSlug: string = "pudgypenguins";
-  var floorPrice = collectionStats?.total.floor_price ?? "-";
-  var topBid: any = "-";
-  var oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume ?? "-";
-  var sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume ?? "-";
-  var totalVolume = collectionStats?.total.volume ?? "-";
-  var owners = collectionStats?.total?.num_owners ?? 0;
-  var royalty = collection?.fees?.find((x) => x.required == true)?.fee ?? "-";
-  var totalSupply = collection?.total_supply ?? 0;
-  var ownershipPercentage = Math.round((totalSupply != 0 ? owners / totalSupply : 0) * 100);
+  const collectionSlug = "pudgypenguins";
+  const floorPrice = collectionStats?.total.floor_price;
+  const topBid: any = null;
+  const oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume;
+  const sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume;
+  const totalVolume = collectionStats?.total.volume;
+  const royalty = collection?.fees?.find((x) => x.required == true)?.fee;
+  const owners = collectionStats?.total?.num_owners ?? 0;
+  const totalSupply = collection?.total_supply ?? 0;
+  const ownershipPercentage = Math.round((totalSupply !== 0 ? owners / totalSupply : 0) * 100);
 
   useEffect(() => {
     fetchNftCollection();
@@ -43,13 +43,14 @@ const About = () => {
       unsubscribeItemSold?.();
       //unsubscribeCollectionOffer?.();
     };
-  }, [collectionSlug, openseaClient]);
+  }, [collectionSlug]);
 
   const fetchNftCollection = async () => {
     try {
       const response = await fetch(`/api/getNftCollection?collectionSlug=${collectionSlug}`);
       const data: NftCollection = await response.json();
       setCollection(data);
+      console.log(`retrieved Collection Info at ${new Date()}`);
     } catch (error) {
       console.error("Error fetching NFT collection data:", error);
     }
@@ -60,6 +61,7 @@ const About = () => {
       const response = await fetch(`/api/getNftCollectionStats?collectionSlug=${collectionSlug}`);
       const data: NftCollectionStats = await response.json();
       setCollectionStats(data);
+      console.log(`retrieved Collection Stats at ${new Date()}`);
     } catch (error) {
       console.error("Error fetching NFT collection stats data:", error);
     }
@@ -124,16 +126,16 @@ const About = () => {
       </div>
       {/* STATS LAYOUT */}
       <div className={`flex flex-1 items-center justify-end`}>
-        <Stat name="FLOOR PRICE" stat={floorPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
-        <Stat name="TOP BID" stat={topBid.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
-        <Stat name={`1D CHANGE`} stat="-%" />
-        <Stat name={`7D CHANGE`} stat="-%" />
-        <Stat name={`1D VOLUME`} stat={oneDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
-        <Stat name={`7D VOLUME`} stat={sevenDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
-        <Stat name="TOTAL VOLUME" stat={totalVolume.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+        <Stat name="FLOOR PRICE" stat={floorPrice ? floorPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
+        <Stat name="TOP BID" stat={topBid ? topBid.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
+        <Stat name="1D CHANGE" stat={`${"-"}%`} />
+        <Stat name="7D CHANGE" stat={`${"-"}%`} />
+        <Stat name="1D VOLUME" stat={oneDayVolume ? oneDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
+        <Stat name="7D VOLUME" stat={sevenDayVolume ? sevenDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
+        <Stat name="TOTAL VOLUME" stat={totalVolume ? totalVolume.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
         <Stat name="OWNERS" stat={`${owners}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`} />
         <Stat name="SUPPLY" stat={totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 })} />
-        <Stat name="ROYALTY" stat={`${royalty}%`} />
+        <Stat name="ROYALTY" stat={`${royalty ?? "-"}%`} />
       </div>
     </div>
   );

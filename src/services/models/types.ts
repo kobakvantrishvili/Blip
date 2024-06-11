@@ -56,3 +56,30 @@ export type NftListing = {
   startTime: string;
   endTime: string;
 };
+
+export type NftSaleEvent = {
+  event_type: string;
+  order_hash: string;
+  chain: string;
+  closing_date: number;
+  nft: {
+    identifier: string;
+    collection: string;
+    contract: string;
+    token_standard: string;
+    name: string;
+    image_url: string;
+    metadata_url: string;
+  };
+  quantity: number;
+  seller: string;
+  buyer: string;
+  payment: {
+    quantity: string;
+    token_address: string;
+    decimals: number;
+    symbol: string;
+  };
+  transaction: string;
+  event_timestamp: number;
+};
