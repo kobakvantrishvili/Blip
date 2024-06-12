@@ -1,5 +1,12 @@
+import { fetchNftCollection } from "@/services/external/fetchNftCollection";
 import { fetchNftCollectionStats } from "@/services/external/fetchNftCollectionStats";
-import NftSalesService from "@/services/NftCollectionSalesService";
+import { NftCollection, NftCollectionStats } from "@/services/models/types";
+
+interface ServiceResponse<T> {
+  status: number;
+  data?: T;
+  error?: string;
+}
 
 class NftCollectionInfoService {
   private collectionSlug: string;
@@ -8,37 +15,35 @@ class NftCollectionInfoService {
     this.collectionSlug = collectionSlug;
   }
 
-  public async getNftCollectionVolumeChange(): Promise<any> {
-    const now = Math.floor(Date.now() / 1000); // Current time in Unix seconds
-    const oneDay = 24 * 60 * 60;
-    const oneWeek = 7 * oneDay;
-
-    const lastDayStart = now - 2 * oneDay;
-    const lastDayEnd = now - oneDay;
-    const lastWeekStart = now - 2 * oneWeek;
-    const lastWeekEnd = now - oneWeek;
+  public async getNftCollectionInfo(): Promise<ServiceResponse<NftCollection>> {
     try {
-      const response = await fetchNftCollectionStats(this.collectionSlug);
+      const response = await fetchNftCollection(this.collectionSlug);
       const data = await response.json();
-      if (response.status !== 200) {
+
+      if (!response.ok) {
         return { status: response.status, error: data };
       }
 
-      const nftSalesService = new NftSalesService(this.collectionSlug);
-      const oneDayVolumeChangeResponse = await nftSalesService.calculateSalesVolumeChange(lastDayStart, lastDayEnd, lastDayEnd, now);
-      const sevenDayVolumeChangeResponse = await nftSalesService.calculateSalesVolumeChange(lastWeekStart, lastWeekEnd, lastWeekEnd, now);
-
-      if (oneDayVolumeChangeResponse.status !== 200) {
-        return { status: oneDayVolumeChangeResponse.status, error: oneDayVolumeChangeResponse.error };
+      return { status: 200, data };
+    } catch (error) {
+      if (error instanceof Error) {
+        return { status: 500, error: error.message };
+      } else {
+        return { status: 500, error: "An unknown error occurred" };
       }
-      if (sevenDayVolumeChangeResponse.status !== 200) {
-        return { status: sevenDayVolumeChangeResponse.status, error: sevenDayVolumeChangeResponse.error };
+    }
+  }
+
+  public async getNftCollectionStats(): Promise<ServiceResponse<NftCollectionStats>> {
+    try {
+      const response = await fetchNftCollectionStats(this.collectionSlug);
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { status: response.status, error: data };
       }
 
-      const oneDayVolumeChange = oneDayVolumeChangeResponse.data!;
-      const sevenDayVolumeChange = sevenDayVolumeChangeResponse.data!;
-
-      return { status: 200, data: { oneDayVolumeChange, sevenDayVolumeChange, statsData: data } };
+      return { status: 200, data };
     } catch (error) {
       if (error instanceof Error) {
         return { status: 500, error: error.message };
