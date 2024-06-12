@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import NftSalesService from "@/services/NftSalesService";
+import NftSalesService from "@/services/NftCollectionSalesService";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { collectionSlug, from1, to1, from2, to2 } = req.query;

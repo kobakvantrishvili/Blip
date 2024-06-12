@@ -7,7 +7,7 @@ interface ServiceResponse<T> {
   error?: string;
 }
 
-class NftListingsService {
+class NftCollectionListingsService {
   private collectionSlug: string;
 
   constructor(collectionSlug: string) {
@@ -55,9 +55,13 @@ class NftListingsService {
 
       return { status: 200, data: listings };
     } catch (error) {
-      return { status: 500, error: "Internal server error. Please open a support ticket so OpenSea can investigate." };
+      if (error instanceof Error) {
+        return { status: 500, error: error.message };
+      } else {
+        return { status: 500, error: "An unknown error occurred" };
+      }
     }
   }
 }
 
-export default NftListingsService;
+export default NftCollectionListingsService;

@@ -9,6 +9,7 @@ export type NftCollection = {
   instagram_username: string;
   discord_url: string;
   project_url: string;
+  opensea_url: string;
   fees: {
     fee: number;
     recipient: string;

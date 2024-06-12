@@ -1,16 +1,14 @@
-import { NextApiResponse } from "next";
-import { NftCollectionStats } from "@/services/models/types";
 import { fetchNftCollectionStats } from "@/services/external/fetchNftCollectionStats";
-import NftSalesService from "@/services/NftSalesService";
+import NftSalesService from "@/services/NftCollectionSalesService";
 
-class NftCollectionService {
+class NftCollectionInfoService {
   private collectionSlug: string;
 
   constructor(collectionSlug: string) {
     this.collectionSlug = collectionSlug;
   }
 
-  public async getNftCollectionStats(): Promise<any> {
+  public async getNftCollectionVolumeChange(): Promise<any> {
     const now = Math.floor(Date.now() / 1000); // Current time in Unix seconds
     const oneDay = 24 * 60 * 60;
     const oneWeek = 7 * oneDay;
@@ -20,10 +18,10 @@ class NftCollectionService {
     const lastWeekStart = now - 2 * oneWeek;
     const lastWeekEnd = now - oneWeek;
     try {
-      const statsResponse = await fetchNftCollectionStats(this.collectionSlug);
-      const statsData = await statsResponse.json();
-      if (statsResponse.status !== 200) {
-        return { status: statsResponse.status, error: statsData };
+      const response = await fetchNftCollectionStats(this.collectionSlug);
+      const data = await response.json();
+      if (response.status !== 200) {
+        return { status: response.status, error: data };
       }
 
       const nftSalesService = new NftSalesService(this.collectionSlug);
@@ -40,11 +38,15 @@ class NftCollectionService {
       const oneDayVolumeChange = oneDayVolumeChangeResponse.data!;
       const sevenDayVolumeChange = sevenDayVolumeChangeResponse.data!;
 
-      return { status: 200, data: { oneDayVolumeChange, sevenDayVolumeChange, statsData } };
+      return { status: 200, data: { oneDayVolumeChange, sevenDayVolumeChange, statsData: data } };
     } catch (error) {
-      return { status: 500, error: "An unknown error occurred" };
+      if (error instanceof Error) {
+        return { status: 500, error: error.message };
+      } else {
+        return { status: 500, error: "An unknown error occurred" };
+      }
     }
   }
 }
 
-export default NftCollectionService;
+export default NftCollectionInfoService;

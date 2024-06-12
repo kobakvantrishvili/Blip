@@ -7,7 +7,7 @@ interface ServiceResponse<T> {
   error?: string;
 }
 
-class NftSalesService {
+class NftCollectionSalesService {
   private readonly collectionSlug: string;
   private readonly saleEvent = "sale";
 
@@ -89,4 +89,4 @@ class NftSalesService {
   }
 }
 
-export default NftSalesService;
+export default NftCollectionSalesService;

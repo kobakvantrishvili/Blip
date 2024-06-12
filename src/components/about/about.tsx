@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { BsCopy, BsTwitterX, BsInstagram, BsDiscord, BsGlobe2 } from "react-icons/bs";
+import { FaSailboat } from "react-icons/fa6";
 import { FiCheck } from "react-icons/fi";
 import { LiaEthereum } from "react-icons/lia";
 
@@ -11,37 +12,40 @@ import { NftCollection, NftCollectionStats } from "@/services/models/types";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
 import Stat from "@/components/about/Stat";
+import { openseaClient } from "@/client/openseaClient";
 
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
+  const [topBid, setTopBid] = useState<number | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const collectionSlug = "pudgypenguins";
-  const floorPrice = collectionStats?.total?.floor_price_symbol == "ETH" ? collectionStats?.total?.floor_price : ""; // TODO : NEEDS HANDLING IF NOT ETH
-  const topBid: any = null;
+  const collectionSlug = "rumble-kong-league";
+
+  const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : "";
   const oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume;
   const sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume;
-  const oneDayVolumeChange = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change! * 100;
-  const sevenDayVolumeChange = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume_change! * 100;
+  const oneDayVolumeChange = (collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change ?? 0) * 100;
+  const sevenDayVolumeChange = (collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume_change ?? 0) * 100;
   const totalVolume = collectionStats?.total.volume;
-  const royalty = collection?.fees?.find((x) => x.required == true)?.fee;
+  const royalty = collection?.fees?.find((x) => x.required)?.fee;
   const owners = collectionStats?.total?.num_owners ?? 0;
   const totalSupply = collection?.total_supply ?? 0;
   const ownershipPercentage = Math.round((totalSupply !== 0 ? owners / totalSupply : 0) * 100);
 
-  useEffect(() => {
-    fetchNftData();
-  }, [collectionSlug]);
-
-  const fetchNftData = async () => {
+  const fetchNftCollectionData = useCallback(async () => {
     try {
-      const [collectionData, statsData] = await Promise.all([fetchNftCollection(), fetchNftCollectionStats()]);
+      const [collectionData, collectionStatsData, topBidData] = await Promise.all([
+        fetchNftCollection(),
+        fetchNftCollectionStats(),
+        fetchNftCollectionTopBid(collectionSlug),
+      ]);
       setCollection(collectionData);
-      setCollectionStats(statsData);
+      setCollectionStats(collectionStatsData);
+      setTopBid(topBidData);
       setError(null);
     } catch (error) {
       console.error("Error fetching NFT data:", error);
@@ -49,7 +53,7 @@ const About = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const fetchNftCollection = async (): Promise<NftCollection> => {
     const response = await fetch(`/api/getNftCollection?collectionSlug=${collectionSlug}`);
@@ -71,10 +75,40 @@ const About = () => {
     return data;
   };
 
-  const getVolumeChangeColor = (volumeChange: number | null | undefined): string => {
-    if (volumeChange === null || volumeChange === undefined) {
-      return "text-text-primary";
-    } else if (volumeChange > 0) {
+  const fetchNftCollectionTopBid = async (collectionSlug: string): Promise<number> => {
+    const response = await fetch(`/api/getNftCollectionTopBid?collectionSlug=${collectionSlug}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch top bid");
+    }
+    const data: number = await response.json();
+    console.log(`Retrieved Top Bid at ${new Date()}`);
+    return data;
+  };
+
+  useEffect(() => {
+    fetchNftCollectionData();
+
+    const handleItemListed = async () => {
+      console.log("Item listed");
+      await fetchNftCollectionStats().then(setCollectionStats);
+    };
+
+    const handleItemSold = async () => {
+      console.log("Item sold");
+      await fetchNftCollectionStats().then(setCollectionStats);
+    };
+
+    const unsubscribeItemSold = openseaClient?.onItemSold(collectionSlug, handleItemSold);
+    const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, handleItemListed);
+
+    return () => {
+      unsubscribeItemSold?.();
+      unsubscribeItemListed?.();
+    };
+  }, [collectionSlug, fetchNftCollectionData]);
+
+  const getVolumeChangeColor = (volumeChange: number): string => {
+    if (volumeChange > 0) {
       return "text-shadow-custom text-highlight-green";
     } else if (volumeChange < 0) {
       return "text-shadow-custom text-highlight-red";
@@ -86,8 +120,8 @@ const About = () => {
   return (
     <div className="mt-16 border-b border-dark-border">
       {!error && (
-        <div className="flex items-center gap-2 px-6 h-[84px] w-full font-jockey ">
-          <div className={`flex 2xl:w-1/4 w-1/5 items-center justify-start gap-4  ${isLoading ? "blur" : ""}`}>
+        <div className="flex items-center gap-2 px-6 h-[84px] w-full font-jockey">
+          <div className={`flex 2xl:w-1/4 w-1/5 items-center justify-start gap-4 ${isLoading ? "blur" : ""}`}>
             <Image
               src={collection?.image_url || "/default-image.jpg"}
               alt={`NFT Collection ${collection?.name}'s Image`}
@@ -138,21 +172,26 @@ const About = () => {
                     <BsGlobe2 />
                   </Link>
                 )}
+                {collection?.opensea_url && (
+                  <Link target="_blank" href={`${collection?.opensea_url}`} className="text-text-secondary hover:text-text-primary text-l">
+                    <FaSailboat />
+                  </Link>
+                )}
               </div>
             </div>
           </div>
           <div className={`flex flex-1 items-center justify-end ${isLoading ? "blur" : ""}`}>
             <Stat name="FLOOR PRICE" icon={LiaEthereum}>
-              {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 3 })}
+              {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             </Stat>
             <Stat name="TOP BID" icon={LiaEthereum}>
-              {topBid?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              {topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             </Stat>
             <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
-              {`${oneDayVolumeChange?.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
+              {`${oneDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
             </Stat>
             <Stat name="7D CHANGE" className={`${getVolumeChangeColor(sevenDayVolumeChange)}`}>
-              {`${sevenDayVolumeChange?.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
+              {`${sevenDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
             </Stat>
             <Stat name="1D VOLUME" icon={LiaEthereum}>
               {oneDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
