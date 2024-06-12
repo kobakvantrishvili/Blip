@@ -9,10 +9,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
-
   try {
-    const response = await fetchNftCollectionStats(collectionSlug as string, apiKey);
+    const response = await fetchNftCollectionStats(collectionSlug as string);
     const data = await response.json();
 
     if (response.status === 200) {

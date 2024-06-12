@@ -15,16 +15,9 @@ const Nav: React.FC = () => {
 
   return (
     <>
-      <Navbar
-        isMenuToggled={isMenuToggled}
-        setIsMenuToggled={setIsMenuToggled}
-        isCopied={isCopied}
-        setIsCopied={setIsCopied}
-      />
+      <Navbar isMenuToggled={isMenuToggled} setIsMenuToggled={setIsMenuToggled} isCopied={isCopied} setIsCopied={setIsCopied} />
       {isMenuToggled && <Sidebar setIsCopied={setIsCopied} />}
-      {!isAboveMediumScreens && (
-        <AnimatePresence>{isCopied && <Notification>Copied to clipboard!</Notification>}</AnimatePresence>
-      )}
+      {!isAboveMediumScreens && <AnimatePresence>{isCopied && <Notification>Copied to clipboard!</Notification>}</AnimatePresence>}
 
       {/* <TestComponent /> */}
     </>

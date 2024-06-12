@@ -1,4 +1,4 @@
-export const fetchNftListings = async (collectionSlug: string, apiKey: string, limit: number, next?: string) => {
+export const fetchNftListings = async (collectionSlug: string, limit: number, next?: string) => {
   const params = new URLSearchParams({
     limit: limit.toString(),
     ...(next && { next }),
@@ -6,7 +6,7 @@ export const fetchNftListings = async (collectionSlug: string, apiKey: string, l
     //If next is falsy, false is spread, which results in no properties being added.
     //so if we supply next, we are adding a new property to params.
   });
-
+  const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
   const url = `https://api.opensea.io/api/v2/listings/collection/${collectionSlug}/best?${params}`;
   const options = {
     method: "GET",

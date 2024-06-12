@@ -1,11 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -19,8 +15,8 @@ const config: Config = {
         "text-secondary": "#808080", // Secondary text color
         "text-tertiary": "#404040", // Tertiary text color
         "text-dark": "#0d0d0d", // Dark text color
-        "highlight-green": "#00FF00", // Green highlight color
-        "highlight-red": "#FF0000", // Red highlight color
+        "highlight-green": "#ade25d", // Green highlight color
+        "highlight-red": "#f95200", // Red highlight color
         "dark-border": "rgba(128, 128, 128, 0.3)", // Border color
       },
       fontFamily: {

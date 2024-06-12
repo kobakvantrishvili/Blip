@@ -1,13 +1,12 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { BsCopy, BsTwitterX, BsInstagram, BsDiscord, BsGlobe2 } from "react-icons/bs";
 import { FiCheck } from "react-icons/fi";
 import { LiaEthereum } from "react-icons/lia";
 
 import { handleCopy } from "@/utils/handleCopy";
-import { openseaClient } from "@/services/openseaClient";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
@@ -18,12 +17,16 @@ const About = () => {
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const collectionSlug = "pudgypenguins";
-  const floorPrice = collectionStats?.total.floor_price;
+  const floorPrice = collectionStats?.total?.floor_price_symbol == "ETH" ? collectionStats?.total?.floor_price : ""; // TODO : NEEDS HANDLING IF NOT ETH
   const topBid: any = null;
   const oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume;
   const sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume;
+  const oneDayVolumeChange = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change! * 100;
+  const sevenDayVolumeChange = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume_change! * 100;
   const totalVolume = collectionStats?.total.volume;
   const royalty = collection?.fees?.find((x) => x.required == true)?.fee;
   const owners = collectionStats?.total?.num_owners ?? 0;
@@ -31,112 +34,141 @@ const About = () => {
   const ownershipPercentage = Math.round((totalSupply !== 0 ? owners / totalSupply : 0) * 100);
 
   useEffect(() => {
-    fetchNftCollection();
-    fetchNftCollectionStats();
-
-    const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, async () => await fetchNftCollectionStats());
-    const unsubscribeItemSold = openseaClient?.onItemSold(collectionSlug, async () => await fetchNftCollectionStats());
-    //const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, async () => await fetchNftCollectionStats());
-
-    return () => {
-      unsubscribeItemListed?.();
-      unsubscribeItemSold?.();
-      //unsubscribeCollectionOffer?.();
-    };
+    fetchNftData();
   }, [collectionSlug]);
 
-  const fetchNftCollection = async () => {
+  const fetchNftData = async () => {
     try {
-      const response = await fetch(`/api/getNftCollection?collectionSlug=${collectionSlug}`);
-      const data: NftCollection = await response.json();
-      setCollection(data);
-      console.log(`retrieved Collection Info at ${new Date()}`);
+      const [collectionData, statsData] = await Promise.all([fetchNftCollection(), fetchNftCollectionStats()]);
+      setCollection(collectionData);
+      setCollectionStats(statsData);
+      setError(null);
     } catch (error) {
-      console.error("Error fetching NFT collection data:", error);
+      console.error("Error fetching NFT data:", error);
+      setError("Failed to fetch NFT Collection data. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const fetchNftCollectionStats = async () => {
-    try {
-      const response = await fetch(`/api/getNftCollectionStats?collectionSlug=${collectionSlug}`);
-      const data: NftCollectionStats = await response.json();
-      setCollectionStats(data);
-      console.log(`retrieved Collection Stats at ${new Date()}`);
-    } catch (error) {
-      console.error("Error fetching NFT collection stats data:", error);
+  const fetchNftCollection = async (): Promise<NftCollection> => {
+    const response = await fetch(`/api/getNftCollection?collectionSlug=${collectionSlug}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch collection data");
+    }
+    const data: NftCollection = await response.json();
+    console.log(`Retrieved Collection Info at ${new Date()}`);
+    return data;
+  };
+
+  const fetchNftCollectionStats = async (): Promise<NftCollectionStats> => {
+    const response = await fetch(`/api/getNftCollectionStats?collectionSlug=${collectionSlug}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch collection stats");
+    }
+    const data: NftCollectionStats = await response.json();
+    console.log(`Retrieved Collection Stats at ${new Date()}`);
+    return data;
+  };
+
+  const getVolumeChangeColor = (volumeChange: number | null | undefined): string => {
+    if (volumeChange === null || volumeChange === undefined) {
+      return "text-text-primary";
+    } else if (volumeChange > 0) {
+      return "text-shadow-custom text-highlight-green";
+    } else if (volumeChange < 0) {
+      return "text-shadow-custom text-highlight-red";
+    } else {
+      return "text-text-primary";
     }
   };
 
   return (
-    <div className={`flex items-center mt-16 top-16 px-6 border-b border-dark-border h-[84px] w-full gap-2 font-jockey`}>
-      {/* TITLE LAYOUT */}
-      <div className={`flex w-1/4 items-center justify-start gap-4`}>
-        <Image
-          src={collection?.image_url || "/default-image.jpg"}
-          alt={`NFT Collection ${collection?.name}'s Image`}
-          width={56}
-          height={56}
-          className="w-14 h-14 rounded-full object-cover"
-        />
-        <div className={`flex flex-col gap-2 w-3/4`}>
-          <p className={`text-2xl tracking-widest overflow-hidden whitespace-nowrap overflow-ellipsis`}>{collection?.name}</p>
-          <div className={`flex flex-row flex-start gap-[10px]`}>
-            <Button
-              onClick={() =>
-                handleCopy({
-                  address: collection?.contracts[0].address,
-                  setIsCopied,
-                  setIsDisabled: setIsButtonDisabled,
-                })
-              }
-              className={`text-text-secondary  hover:text-text-primary text-l ${isButtonDisabled && "disabled-class"}`}
-            >
-              {isCopied ? <FiCheck /> : <BsCopy />}
-            </Button>
-            {collection?.twitter_username && (
-              <Link
-                target="_blank"
-                href={`https://twitter.com/${collection?.twitter_username}`}
-                className={`text-text-secondary  hover:text-text-primary text-l`}
-              >
-                <BsTwitterX />
-              </Link>
-            )}
-            {collection?.instagram_username && (
-              <Link
-                target="_blank"
-                href={`https://www.instagram.com/${collection?.instagram_username}`}
-                className={`text-text-secondary  hover:text-text-primary text-l`}
-              >
-                <BsInstagram />
-              </Link>
-            )}
-            {collection?.discord_url && (
-              <Link target="_blank" href={`${collection?.discord_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
-                <BsDiscord />
-              </Link>
-            )}
-            {collection?.project_url && (
-              <Link target="_blank" href={`${collection?.project_url}`} className={`text-text-secondary  hover:text-text-primary text-l`}>
-                <BsGlobe2 />
-              </Link>
-            )}
+    <div className="mt-16 border-b border-dark-border">
+      {!error && (
+        <div className="flex items-center gap-2 px-6 h-[84px] w-full font-jockey ">
+          <div className={`flex 2xl:w-1/4 w-1/5 items-center justify-start gap-4  ${isLoading ? "blur" : ""}`}>
+            <Image
+              src={collection?.image_url || "/default-image.jpg"}
+              alt={`NFT Collection ${collection?.name}'s Image`}
+              width={56}
+              height={56}
+              className="w-14 h-14 rounded-full object-cover"
+            />
+            <div className="flex flex-col gap-2 w-3/4">
+              <p className="text-2xl tracking-widest overflow-hidden whitespace-nowrap overflow-ellipsis">{collection?.name ?? "Collection Name"}</p>
+              <div className="flex flex-row flex-start gap-[10px]">
+                <Button
+                  onClick={() =>
+                    handleCopy({
+                      address: collection?.contracts[0].address,
+                      setIsCopied,
+                      setIsDisabled: setIsButtonDisabled,
+                    })
+                  }
+                  className={`text-text-secondary hover:text-text-primary text-l ${isButtonDisabled && "disabled-class"}`}
+                >
+                  {isCopied ? <FiCheck /> : <BsCopy />}
+                </Button>
+                {collection?.twitter_username && (
+                  <Link
+                    target="_blank"
+                    href={`https://twitter.com/${collection?.twitter_username}`}
+                    className="text-text-secondary hover:text-text-primary text-l"
+                  >
+                    <BsTwitterX />
+                  </Link>
+                )}
+                {collection?.instagram_username && (
+                  <Link
+                    target="_blank"
+                    href={`https://www.instagram.com/${collection?.instagram_username}`}
+                    className="text-text-secondary hover:text-text-primary text-l"
+                  >
+                    <BsInstagram />
+                  </Link>
+                )}
+                {collection?.discord_url && (
+                  <Link target="_blank" href={`${collection?.discord_url}`} className="text-text-secondary hover:text-text-primary text-l">
+                    <BsDiscord />
+                  </Link>
+                )}
+                {collection?.project_url && (
+                  <Link target="_blank" href={`${collection?.project_url}`} className="text-text-secondary hover:text-text-primary text-l">
+                    <BsGlobe2 />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className={`flex flex-1 items-center justify-end ${isLoading ? "blur" : ""}`}>
+            <Stat name="FLOOR PRICE" icon={LiaEthereum}>
+              {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 3 })}
+            </Stat>
+            <Stat name="TOP BID" icon={LiaEthereum}>
+              {topBid?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </Stat>
+            <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
+              {`${oneDayVolumeChange?.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
+            </Stat>
+            <Stat name="7D CHANGE" className={`${getVolumeChangeColor(sevenDayVolumeChange)}`}>
+              {`${sevenDayVolumeChange?.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
+            </Stat>
+            <Stat name="1D VOLUME" icon={LiaEthereum}>
+              {oneDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </Stat>
+            <Stat name="7D VOLUME" icon={LiaEthereum}>
+              {sevenDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </Stat>
+            <Stat name="TOTAL VOLUME" icon={LiaEthereum}>
+              {totalVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </Stat>
+            <Stat name="OWNERS">{`${owners}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`}</Stat>
+            <Stat name="SUPPLY">{totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Stat>
+            <Stat name="ROYALTY">{`${royalty ?? "-"}%`}</Stat>
           </div>
         </div>
-      </div>
-      {/* STATS LAYOUT */}
-      <div className={`flex flex-1 items-center justify-end`}>
-        <Stat name="FLOOR PRICE" stat={floorPrice ? floorPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
-        <Stat name="TOP BID" stat={topBid ? topBid.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
-        <Stat name="1D CHANGE" stat={`${"-"}%`} />
-        <Stat name="7D CHANGE" stat={`${"-"}%`} />
-        <Stat name="1D VOLUME" stat={oneDayVolume ? oneDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
-        <Stat name="7D VOLUME" stat={sevenDayVolume ? sevenDayVolume.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
-        <Stat name="TOTAL VOLUME" stat={totalVolume ? totalVolume.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-"} icon={LiaEthereum} />
-        <Stat name="OWNERS" stat={`${owners}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`} />
-        <Stat name="SUPPLY" stat={totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 })} />
-        <Stat name="ROYALTY" stat={`${royalty ?? "-"}%`} />
-      </div>
+      )}
     </div>
   );
 };

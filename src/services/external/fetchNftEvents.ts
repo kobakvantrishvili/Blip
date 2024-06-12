@@ -1,13 +1,4 @@
-// services/external/fetchNftEvents.ts
-export const fetchNftEvents = async (
-  collectionSlug: string,
-  eventType: string,
-  apiKey: string,
-  after: number,
-  before: number,
-  limit?: number,
-  next?: string
-) => {
+export const fetchNftEvents = async (collectionSlug: string, eventType: string, after: number, before: number, limit?: number, next?: string) => {
   const params = new URLSearchParams({
     event_type: eventType,
     after: after.toString(),
@@ -16,6 +7,7 @@ export const fetchNftEvents = async (
     ...(next && { next }),
   });
 
+  const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
   const url = `https://api.opensea.io/api/v2/events/collection/${collectionSlug}?${params}`;
   const options = {
     method: "GET",

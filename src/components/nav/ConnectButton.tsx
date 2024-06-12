@@ -1,5 +1,5 @@
 import React from "react";
-import { web3ModalClient } from "@/services/web3ModalClient";
+import { web3ModalClient } from "@/client/web3ModalClient";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 
 type ConnectButtonProps = {

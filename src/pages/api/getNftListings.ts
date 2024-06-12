@@ -1,9 +1,8 @@
-import { fetchNftListings } from "@/services/external/fetchNftListings";
-import processNftListings from "@/services/processNftListings";
+import NftListingsService from "@/services/NftListingsService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { collectionSlug, limit = "100", next, orderType } = req.query;
+  const { collectionSlug, limit = "100", orderType, next } = req.query;
 
   if (typeof collectionSlug !== "string") {
     res.status(400).json({ error: "Invalid collection slug" });
@@ -18,24 +17,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
   const parsedLimit = parseInt(limit, 10);
   const chosenOrderType = parseInt(orderType, 10);
 
   try {
-    const response = await fetchNftListings(collectionSlug, apiKey, parsedLimit, next as string);
-    const data = await response.json();
+    const nftListingsService = new NftListingsService(collectionSlug);
+    const { status, data, error } = await nftListingsService.getNftListingsByType(chosenOrderType, parsedLimit, next as string);
 
-    if (response.status === 200) {
-      res.status(200).json(processNftListings(data, chosenOrderType));
+    if (status === 200) {
+      res.status(200).json(data);
     } else {
-      res.status(response.status).json({ error: data });
+      res.status(status).json({ error });
     }
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.status(500).json({ error: "An unknown error occurred" });
-    }
+    res.status(500).json({ error: "An unknown error occurred" });
   }
 };

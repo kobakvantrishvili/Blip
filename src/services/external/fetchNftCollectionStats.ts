@@ -1,4 +1,5 @@
-export const fetchNftCollectionStats = async (collectionSlug: string, apiKey: string) => {
+export const fetchNftCollectionStats = async (collectionSlug: string) => {
+  const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
   const url = `https://api.opensea.io/api/v2/collections/${collectionSlug}/stats`;
   const options = {
     method: "GET",

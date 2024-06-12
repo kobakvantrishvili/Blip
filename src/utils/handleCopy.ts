@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import { handleCopyClick } from "@/utils/handleCopyClick";
 
 interface CopyProps {
