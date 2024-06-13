@@ -1,3 +1,4 @@
+import NftCollectionInfoService from "@/services/NftCollectionInfoService";
 import { fetchNftCollectionStats } from "@/services/external/fetchNftCollectionStats";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -10,13 +11,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const response = await fetchNftCollectionStats(collectionSlug as string);
-    const data = await response.json();
+    const nftCollectionInfoService = new NftCollectionInfoService(collectionSlug);
+    const { status, data, error } = await nftCollectionInfoService.getNftCollectionStats();
 
-    if (response.status === 200) {
+    if (status === 200) {
       res.status(200).json(data);
     } else {
-      res.status(response.status).json({ error: data });
+      res.status(status).json({ error });
     }
   } catch (err) {
     if (err instanceof Error) {

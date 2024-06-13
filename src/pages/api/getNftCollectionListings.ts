@@ -1,4 +1,4 @@
-import NftListingsService from "@/services/NftCollectionListingsService";
+import NftCollectionListingsService from "@/services/NftCollectionListingsService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -21,7 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const chosenOrderType = parseInt(orderType, 10);
 
   try {
-    const nftListingsService = new NftListingsService(collectionSlug);
+    const nftListingsService = new NftCollectionListingsService(collectionSlug);
     const { status, data, error } = await nftListingsService.getNftListingsByType(chosenOrderType, parsedLimit, next as string);
 
     if (status === 200) {
@@ -30,6 +30,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(status).json({ error });
     }
   } catch (err) {
-    res.status(500).json({ error: "An unknown error occurred" });
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "An unknown error occurred" });
+    }
   }
 };

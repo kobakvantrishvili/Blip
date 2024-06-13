@@ -17,15 +17,15 @@ import { openseaClient } from "@/client/openseaClient";
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
-  const [topBid, setTopBid] = useState<number | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const collectionSlug = "rumble-kong-league";
+  const collectionSlug = "pudgypenguins";
 
-  const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : "";
+  const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
+  const BestOffer = collectionStats?.total?.best_offer;
   const oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume;
   const sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume;
   const oneDayVolumeChange = (collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change ?? 0) * 100;
@@ -38,14 +38,10 @@ const About = () => {
 
   const fetchNftCollectionData = useCallback(async () => {
     try {
-      const [collectionData, collectionStatsData, topBidData] = await Promise.all([
-        fetchNftCollection(),
-        fetchNftCollectionStats(),
-        fetchNftCollectionTopBid(collectionSlug),
-      ]);
+      const [collectionData, collectionStatsData] = await Promise.all([fetchNftCollection(), fetchNftCollectionStats()]);
       setCollection(collectionData);
       setCollectionStats(collectionStatsData);
-      setTopBid(topBidData);
+
       setError(null);
     } catch (error) {
       console.error("Error fetching NFT data:", error);
@@ -72,16 +68,6 @@ const About = () => {
     }
     const data: NftCollectionStats = await response.json();
     console.log(`Retrieved Collection Stats at ${new Date()}`);
-    return data;
-  };
-
-  const fetchNftCollectionTopBid = async (collectionSlug: string): Promise<number> => {
-    const response = await fetch(`/api/getNftCollectionTopBid?collectionSlug=${collectionSlug}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch top bid");
-    }
-    const data: number = await response.json();
-    console.log(`Retrieved Top Bid at ${new Date()}`);
     return data;
   };
 
@@ -115,6 +101,16 @@ const About = () => {
     } else {
       return "text-text-primary";
     }
+  };
+
+  const formatNum = (num: number | undefined): string => {
+    if (num === undefined) {
+      return "";
+    }
+
+    const options = num < 1 ? { maximumFractionDigits: 4 } : { maximumFractionDigits: 2 };
+
+    return num.toLocaleString(undefined, options);
   };
 
   return (
@@ -185,7 +181,7 @@ const About = () => {
               {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             </Stat>
             <Stat name="TOP BID" icon={LiaEthereum}>
-              {topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+              {BestOffer?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             </Stat>
             <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
               {`${oneDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
@@ -202,8 +198,8 @@ const About = () => {
             <Stat name="TOTAL VOLUME" icon={LiaEthereum}>
               {totalVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
             </Stat>
-            <Stat name="OWNERS">{`${owners}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`}</Stat>
-            <Stat name="SUPPLY">{totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 })}</Stat>
+            <Stat name="OWNERS">{`${owners.toLocaleString()}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`}</Stat>
+            <Stat name="SUPPLY">{totalSupply.toLocaleString()}</Stat>
             <Stat name="ROYALTY">{`${royalty ?? "-"}%`}</Stat>
           </div>
         </div>

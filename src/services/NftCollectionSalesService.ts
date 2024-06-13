@@ -67,8 +67,8 @@ class NftCollectionSalesService {
       const volumeResults = await Promise.all([this.calculateSalesVolume(from1, to1), this.calculateSalesVolume(from2, to2)]);
       const hasError = volumeResults.some((result) => result.status !== 200);
       if (hasError) {
-        const error = volumeResults.find((result) => result.status !== 200)?.error || "Failed to calculate sales volume";
-        return { status: error ? 500 : 400, error };
+        const errorResponse = volumeResults.find((result) => result.status !== 200);
+        return { status: errorResponse?.status ?? 500, error: errorResponse?.error ?? "Failed to calculate sales volume" };
       }
       const [volume1Result, volume2Result] = volumeResults.map((result) => result.data?.volume || 0);
       const change = volume1Result !== 0 ? ((volume2Result - volume1Result) / volume1Result) * 100 : 0;

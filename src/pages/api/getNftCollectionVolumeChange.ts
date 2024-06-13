@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import NftSalesService from "@/services/NftCollectionSalesService";
+import NftCollectionSalesService from "@/services/NftCollectionSalesService";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { collectionSlug, from1, to1, from2, to2 } = req.query;
@@ -10,7 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const nftSalesService = new NftSalesService(collectionSlug as string);
+    const nftSalesService = new NftCollectionSalesService(collectionSlug as string);
     const {
       status,
       data: volumeChanges,
