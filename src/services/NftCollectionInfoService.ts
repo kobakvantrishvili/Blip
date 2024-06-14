@@ -38,6 +38,25 @@ class NftCollectionInfoService {
 
   public async getNftCollectionStats(): Promise<ServiceResponse<NftCollectionStats>> {
     try {
+      const response = await fetchNftCollectionStats(this.collectionSlug);
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { status: response.status, error: data };
+      }
+
+      return { status: 200, data };
+    } catch (error) {
+      if (error instanceof Error) {
+        return { status: 500, error: error.message };
+      } else {
+        return { status: 500, error: "An unknown error occurred" };
+      }
+    }
+  }
+
+  public async getNftCollectionStatsAndTopBid(): Promise<ServiceResponse<NftCollectionStats>> {
+    try {
       const nftCollectionOffersService = new NftCollectionOffersService(this.collectionSlug);
       const [statsResponse, offersResponse] = await Promise.all([fetchNftCollectionStats(this.collectionSlug), nftCollectionOffersService.getTopBid()]);
 

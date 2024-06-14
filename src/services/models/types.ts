@@ -27,7 +27,6 @@ export type NftCollectionStats = {
     num_owners: number;
     market_cap: number;
     floor_price: number;
-    best_offer: number;
     floor_price_symbol: string;
   };
   intervals: Array<{

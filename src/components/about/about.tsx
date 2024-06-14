@@ -17,15 +17,16 @@ import { openseaClient } from "@/client/openseaClient";
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
+  const [collectionTopBid, setCollectionTopBid] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const collectionSlug = "lilpudgys";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
-  const BestOffer = collectionStats?.total?.best_offer;
+  const topBid = collectionTopBid;
   const oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume;
   const sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume;
   const oneDayVolumeChange = (collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change ?? 0) * 100;
@@ -38,9 +39,14 @@ const About = () => {
 
   const fetchNftCollectionData = useCallback(async () => {
     try {
-      const [collectionData, collectionStatsData] = await Promise.all([fetchNftCollection(), fetchNftCollectionStats()]);
+      const [collectionData, collectionStatsData, collectionTopBid] = await Promise.all([
+        fetchNftCollection(),
+        fetchNftCollectionStats(),
+        fetchNftCollectionTopBid(),
+      ]);
       setCollection(collectionData);
       setCollectionStats(collectionStatsData);
+      setCollectionTopBid(collectionTopBid);
 
       setError(null);
     } catch (error) {
@@ -71,6 +77,16 @@ const About = () => {
     return data;
   };
 
+  const fetchNftCollectionTopBid = async (): Promise<number> => {
+    const response = await fetch(`/api/getNftCollectionTopBid?collectionSlug=${collectionSlug}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch collection top bid");
+    }
+    const data: number = await response.json();
+    console.log(`Retrieved Collection Top Bid at ${new Date()}`);
+    return data;
+  };
+
   useEffect(() => {
     fetchNftCollectionData();
     let debounceTimer: NodeJS.Timeout | null = null;
@@ -88,7 +104,7 @@ const About = () => {
     const handleCollectionOfferMade = async () => {
       console.log("Collection offer made");
       if (debounceTimer) return;
-      await fetchNftCollectionStats().then(setCollectionStats);
+      await fetchNftCollectionTopBid().then(setCollectionTopBid);
 
       debounceTimer = setTimeout(async () => {
         debounceTimer = null;
@@ -189,7 +205,7 @@ const About = () => {
               {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             </Stat>
             <Stat name="TOP BID" icon={LiaEthereum}>
-              {BestOffer?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+              {topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
             </Stat>
             <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
               {`${oneDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
