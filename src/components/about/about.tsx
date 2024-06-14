@@ -22,7 +22,7 @@ const About = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const collectionSlug = "pudgypenguins";
+  const collectionSlug = "lilpudgys";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
   const BestOffer = collectionStats?.total?.best_offer;
@@ -73,6 +73,7 @@ const About = () => {
 
   useEffect(() => {
     fetchNftCollectionData();
+    let debounceTimer: NodeJS.Timeout | null = null;
 
     const handleItemListed = async () => {
       console.log("Item listed");
@@ -84,12 +85,29 @@ const About = () => {
       await fetchNftCollectionStats().then(setCollectionStats);
     };
 
+    const handleCollectionOfferMade = async () => {
+      console.log("Collection offer made");
+      if (debounceTimer) return;
+      await fetchNftCollectionStats().then(setCollectionStats);
+
+      debounceTimer = setTimeout(async () => {
+        debounceTimer = null;
+      }, 10000);
+    };
+
     const unsubscribeItemSold = openseaClient?.onItemSold(collectionSlug, handleItemSold);
     const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, handleItemListed);
+    const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, () =>
+      debounceTimer === null ? handleCollectionOfferMade() : () => {}
+    );
 
     return () => {
       unsubscribeItemSold?.();
       unsubscribeItemListed?.();
+      unsubscribeCollectionOffer?.();
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
     };
   }, [collectionSlug, fetchNftCollectionData]);
 
@@ -101,16 +119,6 @@ const About = () => {
     } else {
       return "text-text-primary";
     }
-  };
-
-  const formatNum = (num: number | undefined): string => {
-    if (num === undefined) {
-      return "";
-    }
-
-    const options = num < 1 ? { maximumFractionDigits: 4 } : { maximumFractionDigits: 2 };
-
-    return num.toLocaleString(undefined, options);
   };
 
   return (
