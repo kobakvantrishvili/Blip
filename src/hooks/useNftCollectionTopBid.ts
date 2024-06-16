@@ -1,4 +1,4 @@
-export const useNftCollectionTopBid = async (collectionSlug: string): Promise<number> => {
+const useNftCollectionTopBid = async (collectionSlug: string): Promise<number> => {
   const response = await fetch(`/api/getNftCollectionTopBid?collectionSlug=${collectionSlug}`);
   if (!response.ok) {
     throw new Error("Failed to fetch collection top bid");
@@ -7,3 +7,5 @@ export const useNftCollectionTopBid = async (collectionSlug: string): Promise<nu
   console.log(`Retrieved Collection Top Bid at ${new Date()}`);
   return data;
 };
+
+export default useNftCollectionTopBid;

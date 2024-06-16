@@ -1,6 +1,6 @@
 import { NftCollectionStats } from "@/services/models/types";
 
-export const useNftCollectionStats = async (collectionSlug: string): Promise<NftCollectionStats> => {
+const useNftCollectionStats = async (collectionSlug: string): Promise<NftCollectionStats> => {
   const response = await fetch(`/api/getNftCollectionStats?collectionSlug=${collectionSlug}`);
   if (!response.ok) {
     throw new Error("Failed to fetch collection stats");
@@ -9,3 +9,5 @@ export const useNftCollectionStats = async (collectionSlug: string): Promise<Nft
   console.log(`Retrieved Collection Stats at ${new Date()}`);
   return data;
 };
+
+export default useNftCollectionStats;

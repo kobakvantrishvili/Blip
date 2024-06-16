@@ -26,7 +26,7 @@ const Stat: React.FC<StatProps> = ({ name, children, className, icon: Icon }) =>
 
   return (
     <div className={`flex flex-col flex-1 justify-center items-end`}>
-      <p className={`text-sm text-text-secondary tracking-widest`}>{name}</p>
+      <p className={`text-text-secondary tracking-widest whitespace-nowrap text-sm`}>{name}</p>
       <div className={`flex flex-row items-center`}>
         <div className={`text-base tracking-wider ${className} ${showFlash ? "flash" : ""}`}>{children ?? "-"}</div>
         {Icon && <Icon className="text-text-secondary text-xl relative left-1" />}

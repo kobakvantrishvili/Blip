@@ -6,6 +6,7 @@ import { BsCopy, BsTwitterX, BsInstagram, BsDiscord, BsGlobe2 } from "react-icon
 import { FaSailboat } from "react-icons/fa6";
 import { FiCheck } from "react-icons/fi";
 import { LiaEthereum } from "react-icons/lia";
+import { MdOutlineQueryStats, MdFilterList } from "react-icons/md";
 
 import { handleCopy } from "@/utils/handleCopy";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
@@ -13,9 +14,10 @@ import { openseaClient } from "@/client/openseaClient";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
 import Stat from "@/components/about/Stat";
-import { useNftCollectionStats } from "@/hooks/useNftCollectionStats";
-import { useNftCollection } from "@/hooks/useNftCollection";
-import { useNftCollectionTopBid } from "@/hooks/useNftCollectionTopBid";
+import useNftCollectionStats from "@/hooks/useNftCollectionStats";
+import useNftCollection from "@/hooks/useNftCollection";
+import useNftCollectionTopBid from "@/hooks/useNftCollectionTopBid";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
@@ -26,7 +28,7 @@ const About = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const collectionSlug = "lilpudgys";
+  const collectionSlug = "clonex";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
   const topBid = collectionTopBid;
@@ -39,6 +41,9 @@ const About = () => {
   const owners = collectionStats?.total?.num_owners ?? 0;
   const totalSupply = collection?.total_supply ?? 0;
   const ownershipPercentage = Math.round((totalSupply !== 0 ? owners / totalSupply : 0) * 100);
+
+  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
+  const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
 
   const fetchNftCollectionData = useCallback(async () => {
     try {
@@ -113,8 +118,8 @@ const About = () => {
   return (
     <div className="mt-16 border-b border-dark-border">
       {!error && (
-        <div className="flex items-center gap-2 px-6 h-[84px] w-full font-jockey">
-          <div className={`flex 2xl:w-1/4 w-1/5 items-center justify-start gap-4 ${isLoading ? "blur" : ""}`}>
+        <div className="flex justify-between items-center gap-4 px-6 h-[84px] w-full font-jockey">
+          <div className={`flex w-auto lg:w-1/5 items-center justify-start gap-4 ${isLoading ? "blur" : ""}`}>
             <Image
               src={collection?.image_url || "/default-image.jpg"}
               alt={`NFT Collection ${collection?.name}'s Image`}
@@ -173,32 +178,43 @@ const About = () => {
               </div>
             </div>
           </div>
-          <div className={`flex flex-1 items-center justify-end ${isLoading ? "blur" : ""}`}>
-            <Stat name="FLOOR PRICE" icon={LiaEthereum}>
-              {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-            </Stat>
-            <Stat name="TOP BID" icon={LiaEthereum}>
-              {topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-            </Stat>
-            <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
-              {`${oneDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
-            </Stat>
-            <Stat name="7D CHANGE" className={`${getVolumeChangeColor(sevenDayVolumeChange)}`}>
-              {`${sevenDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
-            </Stat>
-            <Stat name="1D VOLUME" icon={LiaEthereum}>
-              {oneDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-            </Stat>
-            <Stat name="7D VOLUME" icon={LiaEthereum}>
-              {sevenDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-            </Stat>
-            <Stat name="TOTAL VOLUME" icon={LiaEthereum}>
-              {totalVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-            </Stat>
-            <Stat name="OWNERS">{`${owners.toLocaleString()}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`}</Stat>
-            <Stat name="SUPPLY">{totalSupply.toLocaleString()}</Stat>
-            <Stat name="ROYALTY">{`${royalty ?? "-"}%`}</Stat>
-          </div>
+          {isAboveLargeScreens ? (
+            <div className={`flex flex-1 items-center justify-end gap-2 ${isLoading ? "blur" : ""}`}>
+              <Stat name="FLOOR PRICE" icon={LiaEthereum}>
+                {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+              </Stat>
+              <Stat name="TOP BID" icon={LiaEthereum}>
+                {topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+              </Stat>
+              <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
+                {`${oneDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
+              </Stat>
+              <Stat name="7D CHANGE" className={`${getVolumeChangeColor(sevenDayVolumeChange)}`}>
+                {`${sevenDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
+              </Stat>
+              <Stat name="1D VOLUME" icon={LiaEthereum}>
+                {oneDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              </Stat>
+              <Stat name="7D VOLUME" icon={LiaEthereum}>
+                {sevenDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              </Stat>
+              <Stat name="TOTAL VOLUME" icon={LiaEthereum}>
+                {totalVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              </Stat>
+              <Stat name="OWNERS">{`${owners.toLocaleString()}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`}</Stat>
+              <Stat name="SUPPLY">{totalSupply.toLocaleString()}</Stat>
+              <Stat name="ROYALTY">{`${royalty ?? "-"}%`}</Stat>
+            </div>
+          ) : (
+            <div className={`flex flex-1 items-center justify-end gap-2 ${isLoading ? "blur" : ""}`}>
+              <Button className="border p-1 text-text-secondary border-dark-border hover:text-text-primary hover:border-text-primary">
+                <MdFilterList className=" text-2xl" />
+              </Button>
+              <Button className="border p-1 text-text-secondary border-dark-border hover:text-text-primary hover:border-text-primary">
+                <MdOutlineQueryStats className=" text-2xl" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
