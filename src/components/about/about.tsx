@@ -9,10 +9,13 @@ import { LiaEthereum } from "react-icons/lia";
 
 import { handleCopy } from "@/utils/handleCopy";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
+import { openseaClient } from "@/client/openseaClient";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
 import Stat from "@/components/about/Stat";
-import { openseaClient } from "@/client/openseaClient";
+import { useNftCollectionStats } from "@/hooks/useNftCollectionStats";
+import { useNftCollection } from "@/hooks/useNftCollection";
+import { useNftCollectionTopBid } from "@/hooks/useNftCollectionTopBid";
 
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
@@ -40,9 +43,9 @@ const About = () => {
   const fetchNftCollectionData = useCallback(async () => {
     try {
       const [collectionData, collectionStatsData, collectionTopBid] = await Promise.all([
-        fetchNftCollection(),
-        fetchNftCollectionStats(),
-        fetchNftCollectionTopBid(),
+        useNftCollection(collectionSlug),
+        useNftCollectionStats(collectionSlug),
+        useNftCollectionTopBid(collectionSlug),
       ]);
       setCollection(collectionData);
       setCollectionStats(collectionStatsData);
@@ -57,54 +60,24 @@ const About = () => {
     }
   }, []);
 
-  const fetchNftCollection = async (): Promise<NftCollection> => {
-    const response = await fetch(`/api/getNftCollection?collectionSlug=${collectionSlug}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch collection data");
-    }
-    const data: NftCollection = await response.json();
-    console.log(`Retrieved Collection Info at ${new Date()}`);
-    return data;
-  };
-
-  const fetchNftCollectionStats = async (): Promise<NftCollectionStats> => {
-    const response = await fetch(`/api/getNftCollectionStats?collectionSlug=${collectionSlug}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch collection stats");
-    }
-    const data: NftCollectionStats = await response.json();
-    console.log(`Retrieved Collection Stats at ${new Date()}`);
-    return data;
-  };
-
-  const fetchNftCollectionTopBid = async (): Promise<number> => {
-    const response = await fetch(`/api/getNftCollectionTopBid?collectionSlug=${collectionSlug}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch collection top bid");
-    }
-    const data: number = await response.json();
-    console.log(`Retrieved Collection Top Bid at ${new Date()}`);
-    return data;
-  };
-
   useEffect(() => {
     fetchNftCollectionData();
     let debounceTimer: NodeJS.Timeout | null = null;
 
     const handleItemListed = async () => {
       console.log("Item listed");
-      await fetchNftCollectionStats().then(setCollectionStats);
+      await useNftCollectionStats(collectionSlug).then(setCollectionStats);
     };
 
     const handleItemSold = async () => {
       console.log("Item sold");
-      await fetchNftCollectionStats().then(setCollectionStats);
+      await useNftCollectionStats(collectionSlug).then(setCollectionStats);
     };
 
     const handleCollectionOfferMade = async () => {
       console.log("Collection offer made");
       if (debounceTimer) return;
-      await fetchNftCollectionTopBid().then(setCollectionTopBid);
+      await useNftCollectionTopBid(collectionSlug).then(setCollectionTopBid);
 
       debounceTimer = setTimeout(async () => {
         debounceTimer = null;
