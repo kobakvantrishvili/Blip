@@ -10,6 +10,7 @@ body,
 .app {
     height: 100%;
     width: 100%;
+    overflow: hidden;
     font-family: "Jaro", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;

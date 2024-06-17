@@ -19,7 +19,7 @@ export default function RootLayout({
   const initialState = cookieToInitialState(config, headers().get("cookie"));
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="min-h-screen">
         <Web3ModalProvider initialState={initialState}>
           <EthereumProvider>{children}</EthereumProvider>
         </Web3ModalProvider>

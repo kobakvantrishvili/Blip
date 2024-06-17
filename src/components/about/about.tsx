@@ -28,21 +28,22 @@ const About = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const collectionSlug = "clonex";
+  const collectionSlug = "pudgypenguins";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
   const topBid = collectionTopBid;
   const oneDayVolume = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume;
   const sevenDayVolume = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume;
-  const oneDayVolumeChange = (collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change ?? 0) * 100;
-  const sevenDayVolumeChange = (collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume_change ?? 0) * 100;
+  const oneDayVolumeChange = collectionStats?.intervals?.find((x) => x.interval === "one_day")?.volume_change;
+  const sevenDayVolumeChange = collectionStats?.intervals?.find((x) => x.interval === "seven_day")?.volume_change;
+  const oneDayVolumeChangePrecent = oneDayVolumeChange ? oneDayVolumeChange * 100 : undefined;
+  const sevenDayVolumeChangePrecent = sevenDayVolumeChange ? sevenDayVolumeChange * 100 : undefined;
   const totalVolume = collectionStats?.total.volume;
   const royalty = collection?.fees?.find((x) => x.required)?.fee;
-  const owners = collectionStats?.total?.num_owners ?? 0;
-  const totalSupply = collection?.total_supply ?? 0;
-  const ownershipPercentage = Math.round((totalSupply !== 0 ? owners / totalSupply : 0) * 100);
+  const owners = collectionStats?.total?.num_owners;
+  const totalSupply = collection?.total_supply;
+  const ownershipPercentage = totalSupply && owners ? Math.round((owners / totalSupply) * 100) : undefined;
 
-  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
 
   const fetchNftCollectionData = useCallback(async () => {
@@ -105,14 +106,17 @@ const About = () => {
     };
   }, [collectionSlug, fetchNftCollectionData]);
 
-  const getVolumeChangeColor = (volumeChange: number): string => {
-    if (volumeChange > 0) {
-      return "text-shadow-custom text-highlight-green";
-    } else if (volumeChange < 0) {
-      return "text-shadow-custom text-highlight-red";
-    } else {
-      return "text-text-primary";
+  const getVolumeChangeColor = (volumeChange: number | undefined): string => {
+    if (volumeChange) {
+      if (volumeChange > 0) {
+        return "text-shadow-custom text-highlight-green";
+      } else if (volumeChange < 0) {
+        return "text-shadow-custom text-highlight-red";
+      } else {
+        return "text-text-primary";
+      }
     }
+    return "text-text-primary";
   };
 
   return (
@@ -180,30 +184,26 @@ const About = () => {
           </div>
           {isAboveLargeScreens ? (
             <div className={`flex flex-1 items-center justify-end gap-2 ${isLoading ? "blur" : ""}`}>
-              <Stat name="FLOOR PRICE" icon={LiaEthereum}>
-                {floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-              </Stat>
-              <Stat name="TOP BID" icon={LiaEthereum}>
-                {topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-              </Stat>
-              <Stat name="1D CHANGE" className={`${getVolumeChangeColor(oneDayVolumeChange)}`}>
-                {`${oneDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
-              </Stat>
-              <Stat name="7D CHANGE" className={`${getVolumeChangeColor(sevenDayVolumeChange)}`}>
-                {`${sevenDayVolumeChange.toLocaleString(undefined, { maximumFractionDigits: 2 })}%`}
-              </Stat>
-              <Stat name="1D VOLUME" icon={LiaEthereum}>
-                {oneDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-              </Stat>
-              <Stat name="7D VOLUME" icon={LiaEthereum}>
-                {sevenDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-              </Stat>
-              <Stat name="TOTAL VOLUME" icon={LiaEthereum}>
-                {totalVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-              </Stat>
-              <Stat name="OWNERS">{`${owners.toLocaleString()}${"\u00A0".repeat(2)}(${ownershipPercentage}%)`}</Stat>
-              <Stat name="SUPPLY">{totalSupply.toLocaleString()}</Stat>
-              <Stat name="ROYALTY">{`${royalty ?? "-"}%`}</Stat>
+              <Stat name="FLOOR PRICE" value={floorPrice?.toLocaleString(undefined, { maximumFractionDigits: 4 })} icon={LiaEthereum} />
+              <Stat name="TOP BID" value={topBid?.toLocaleString(undefined, { maximumFractionDigits: 4 })} icon={LiaEthereum} />
+              <Stat
+                name="1D CHANGE"
+                value={oneDayVolumeChangePrecent?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                suffix="%"
+                className={`${getVolumeChangeColor(oneDayVolumeChangePrecent)}`}
+              />
+              <Stat
+                name="7D CHANGE"
+                value={sevenDayVolumeChangePrecent?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                suffix="%"
+                className={`${getVolumeChangeColor(sevenDayVolumeChangePrecent)}`}
+              />
+              <Stat name="1D VOLUME" value={oneDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+              <Stat name="7D VOLUME" value={sevenDayVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+              <Stat name="TOTAL VOLUME" value={totalVolume?.toLocaleString(undefined, { maximumFractionDigits: 2 })} icon={LiaEthereum} />
+              <Stat name="OWNERS" value={owners?.toLocaleString()} suffix={`${"\u00A0".repeat(2)}(${ownershipPercentage}%)`} />
+              <Stat name="SUPPLY" value={totalSupply?.toLocaleString()} />
+              <Stat name="ROYALTY" value={royalty?.toLocaleString()} suffix="%" />
             </div>
           ) : (
             <div className={`flex flex-1 items-center justify-end gap-2 ${isLoading ? "blur" : ""}`}>
