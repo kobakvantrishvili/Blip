@@ -7,7 +7,7 @@ export default function Page() {
     <div className={`bg-dark-bg min-h-screen flex flex-col`}>
       <Nav />
       <About />
-      <div className="flex-1">
+      <div className="flex flex-1">
         <Main />
       </div>
     </div>

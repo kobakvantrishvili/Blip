@@ -59,4 +59,23 @@ body,
       color: inherit;
     }
   }
+
+  .radio-button {
+    appearance: none;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    background-color: #0a0a0a;
+    position: relative;
+    cursor: pointer;
+  }
   
+  .radio-button:checked {
+    background-color: #ffad33;
+  }
+  
+  .radio-button:hover:not(:checked) {
+    border-color: #262626;
+    background-color: #fff;
+  }
