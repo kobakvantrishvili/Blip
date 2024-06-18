@@ -77,5 +77,6 @@ body,
   
   .radio-button:hover:not(:checked) {
     border-color: #262626;
-    background-color: #fff;
+    background-color: #dcdcdc;
+    box-shadow: currentcolor 0px 0px 3px;
   }

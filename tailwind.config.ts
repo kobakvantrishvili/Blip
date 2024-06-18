@@ -11,7 +11,7 @@ const config: Config = {
         "primary-accent": "#ffad33", // Primary accent color (orange-yellow)
         "secondary-accent": "#FF5733", // Secondary accent color (orange-red)
         "tertiary-accent": "#fb8618", // tertiary accent color (orange)
-        "text-primary": "rgb(220, 220, 220)", // Primary text color
+        "text-primary": "	#dcdcdc", // Primary text color
         "text-secondary": "#808080", // Secondary text color
         "text-tertiary": "#404040", // Tertiary text color
         "text-dark": "#0d0d0d", // Dark text color

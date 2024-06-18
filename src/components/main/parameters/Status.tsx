@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import RadioButton from "./RadioButton"; // Adjust the import path as per your directory structure
 
 const Status: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>("SHOW ALL");
+  const [selectedOption, setSelectedOption] = useState<string>("BUY NOW");
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOption(event.target.value);
