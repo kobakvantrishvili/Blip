@@ -11,8 +11,8 @@ const Status: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3 mt-6">
-      <h2 className="text-base tracking-widest">STATUS</h2>
+    <div className="flex flex-col gap-3 px-3">
+      <h2 className="text-sm tracking-widest">STATUS</h2>
       <div className="flex flex-col gap-1">
         <RadioButton label="BUY NOW" value="BUY NOW" checked={selectedOption === "BUY NOW"} onChange={handleOptionChange} />
         <RadioButton label="SHOW ALL" value="SHOW ALL" checked={selectedOption === "SHOW ALL"} onChange={handleOptionChange} />

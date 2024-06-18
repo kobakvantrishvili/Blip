@@ -4,7 +4,7 @@ import Parameters from "@/components/main/parameters/Parameters";
 
 const Main = () => {
   return (
-    <main className="flex justify-between flex-row flex-1 px-6 font-jockey">
+    <main className="flex justify-between flex-row flex-1 font-jockey">
       {/* TRAITS  */}
       <Parameters />
       {/* LISTINGS  */}

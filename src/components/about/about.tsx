@@ -75,8 +75,8 @@ const About = () => {
       await useNftCollectionStats(collectionSlug).then(setCollectionStats);
     };
 
-    const handleItemSold = async () => {
-      console.log("Item sold");
+    const handleItemTransferred = async () => {
+      console.log("Item transferred");
       await useNftCollectionStats(collectionSlug).then(setCollectionStats);
     };
 
@@ -90,14 +90,14 @@ const About = () => {
       }, 10000);
     };
 
-    const unsubscribeItemSold = openseaClient?.onItemSold(collectionSlug, handleItemSold);
+    const unsubscribeItemTransferred = openseaClient?.onItemTransferred(collectionSlug, handleItemTransferred);
     const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, handleItemListed);
     const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, () =>
       debounceTimer === null ? handleCollectionOfferMade() : () => {}
     );
 
     return () => {
-      unsubscribeItemSold?.();
+      unsubscribeItemTransferred?.();
       unsubscribeItemListed?.();
       unsubscribeCollectionOffer?.();
       if (debounceTimer) {
@@ -131,8 +131,10 @@ const About = () => {
               height={56}
               className="w-14 h-14 rounded-full object-cover"
             />
-            <div className="flex flex-col gap-2 w-3/4">
-              <p className="text-2xl tracking-widest overflow-hidden whitespace-nowrap overflow-ellipsis">{collection?.name ?? "Collection Name"}</p>
+            <div className="flex flex-col justify-center gap-2 w-3/4 h-auto relative bottom-1">
+              <p className="text-2xl tracking-widest overflow-hidden whitespace-nowrap overflow-ellipsis">
+                {collection?.name ?? "Collection Name"}
+              </p>
               <div className="flex flex-row flex-start gap-[10px]">
                 <Button
                   onClick={() =>
