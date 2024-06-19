@@ -8,6 +8,7 @@ const config: Config = {
         "dark-bg": "#080404", // Background color
         "dark-panel": "#0a0a0a", // Panel color
         "dark-hover": "#262626", // Button color when hovered
+        "dark-selected": "#333333", // Panel is selected
         "primary-accent": "#ffad33", // Primary accent color (orange-yellow)
         "secondary-accent": "#FF5733", // Secondary accent color (orange-red)
         "tertiary-accent": "#fb8618", // tertiary accent color (orange)
@@ -34,6 +35,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar-hide")],
 };
 export default config;

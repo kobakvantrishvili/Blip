@@ -12,7 +12,7 @@ const Parameters: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[290px] 2xl:max-w-[320px] min-w-[250px] flex-1 border-r border-dark-border">
+    <div className="max-w-[290px] 2xl:max-w-[320px] min-w-[250px] flex-1 border-r border-dark-border h-full">
       <div className="flex flex-col gap-4 px-3 py-6 border-b border-dark-border">
         <Status />
         <div className="flex flex-col gap-2">
@@ -20,7 +20,7 @@ const Parameters: React.FC = () => {
           {isPriceOpen && <PriceRangeInput />}
         </div>
       </div>
-      <div className="px-3 py-6">
+      <div className="px-3 py-6 h-[calc(100%-193px)]">
         <Traits />
       </div>
     </div>

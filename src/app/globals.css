@@ -80,3 +80,16 @@ body,
     background-color: #dcdcdc;
     box-shadow: currentcolor 0px 0px 3px;
   }
+
+  ::-webkit-scrollbar {
+    width: 4px; /* Width of the scrollbar */
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Track color */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #ffad33; /* Thumb color (orange) */
+    border-radius: 2px; /* Rounded corners */
+  }

@@ -84,3 +84,16 @@ export type NftSaleEvent = {
   transaction: string;
   event_timestamp: number;
 };
+
+export type CollectionTraits = {
+  categories: {
+    [category: string]: string;
+  };
+  counts: {
+    [category: string]: TraitCounts;
+  };
+};
+
+export type TraitCounts = {
+  [type: string]: number;
+};

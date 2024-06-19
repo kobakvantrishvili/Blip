@@ -10,7 +10,6 @@ import { MdOutlineQueryStats, MdFilterList } from "react-icons/md";
 
 import { handleCopy } from "@/utils/handleCopy";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
-import { openseaClient } from "@/client/openseaClient";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
 import Stat from "@/components/about/Stat";
@@ -28,7 +27,7 @@ const About = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const collectionSlug = "pudgypenguins";
+  const collectionSlug = "lilpudgys";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
   const topBid = collectionTopBid;
@@ -90,16 +89,16 @@ const About = () => {
       }, 10000);
     };
 
-    const unsubscribeItemTransferred = openseaClient?.onItemTransferred(collectionSlug, handleItemTransferred);
-    const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, handleItemListed);
-    const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, () =>
-      debounceTimer === null ? handleCollectionOfferMade() : () => {}
-    );
+    // const unsubscribeItemTransferred = openseaClient?.onItemTransferred(collectionSlug, handleItemTransferred);
+    // const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, handleItemListed);
+    // const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, () =>
+    //   debounceTimer === null ? handleCollectionOfferMade() : () => {}
+    // );
 
     return () => {
-      unsubscribeItemTransferred?.();
-      unsubscribeItemListed?.();
-      unsubscribeCollectionOffer?.();
+      // unsubscribeItemTransferred?.();
+      // unsubscribeItemListed?.();
+      // unsubscribeCollectionOffer?.();
       if (debounceTimer) {
         clearTimeout(debounceTimer);
       }
