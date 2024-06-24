@@ -20,7 +20,7 @@ const Parameters: React.FC = () => {
           {isPriceOpen && <PriceRangeInput />}
         </div>
       </div>
-      <div className="px-3 py-6 h-[calc(100%-193px)]">
+      <div className={`px-3 py-6 ${isPriceOpen ? "h-[calc(100%-277px)]" : "h-[calc(100%-193px)]"}`}>
         <Traits />
       </div>
     </div>

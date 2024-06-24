@@ -1,5 +1,3 @@
-// src/client/OpenSeaClient.ts
-
 const WEBSOCKET_URL = "wss://stream.openseabeta.com/socket/websocket";
 const API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY; // Make sure to add your API key in the .env.local file
 
@@ -81,7 +79,7 @@ class OpenSeaClient {
     this.ws.onclose = this.onSocketClose.bind(this);
     this.ws.onerror = this.onSocketError.bind(this);
 
-    this.reconnectAttempts = 0;
+    window.addEventListener("beforeunload", this.disconnect.bind(this));
   }
 
   private onSocketOpen() {
@@ -91,6 +89,7 @@ class OpenSeaClient {
     this.sendHeartbeat();
     this.heartbeatInterval = setInterval(this.sendHeartbeat.bind(this), 30000);
     this.subscribeToCollection();
+    this.reconnectAttempts = 0;
   }
 
   private onSocketMessage(message: MessageEvent) {
@@ -101,18 +100,28 @@ class OpenSeaClient {
 
   private onSocketClose(event: CloseEvent) {
     console.log("Disconnected from OpenSea Stream API");
-    console.log(`WebSocket closed with code: ${event.code}, reason: ${event.reason}`);
+    console.log(`WebSocket closed with code: ${event.code} ${event.reason != "" ? `, reason ${event.reason}` : ""}`);
     this.isConnected = false;
     if (this.heartbeatInterval) {
       clearInterval(this.heartbeatInterval);
       this.heartbeatInterval = null;
     }
-    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+    const reconnectInterval = setInterval(() => {
+      if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+        clearInterval(reconnectInterval);
+        console.error("Max reconnect attempts reached. Giving up.");
+        return;
+      }
+
+      console.log(`Attempting to reconnect... (${this.reconnectAttempts + 1}/${this.maxReconnectAttempts})`);
       this.reconnectAttempts++;
-      setTimeout(() => this.connect(), this.reconnectDelay);
-    } else {
-      console.error("Max reconnect attempts reached. Giving up.");
-    }
+      this.connect();
+
+      if (this.isConnected) {
+        clearInterval(reconnectInterval);
+        return;
+      }
+    }, this.reconnectDelay);
   }
 
   private onSocketError(event: Event) {

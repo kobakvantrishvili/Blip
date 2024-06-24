@@ -17,6 +17,7 @@ import useNftCollectionStats from "@/hooks/useNftCollectionStats";
 import useNftCollection from "@/hooks/useNftCollection";
 import useNftCollectionTopBid from "@/hooks/useNftCollectionTopBid";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import OpenSeaClient from "@/client/openseaClient";
 
 const About = () => {
   const [collection, setCollection] = useState<NftCollection | null>(null);
@@ -67,20 +68,18 @@ const About = () => {
 
   useEffect(() => {
     fetchNftCollectionData();
+    const openSeaClient = new OpenSeaClient({ collectionSlug });
     let debounceTimer: NodeJS.Timeout | null = null;
 
     const handleItemListed = async () => {
-      console.log("Item listed");
       await useNftCollectionStats(collectionSlug).then(setCollectionStats);
     };
 
-    const handleItemTransferred = async () => {
-      console.log("Item transferred");
+    const handleItemSold = async () => {
       await useNftCollectionStats(collectionSlug).then(setCollectionStats);
     };
 
-    const handleCollectionOfferMade = async () => {
-      console.log("Collection offer made");
+    const handleCollectionOffer = async () => {
       if (debounceTimer) return;
       await useNftCollectionTopBid(collectionSlug).then(setCollectionTopBid);
 
@@ -89,16 +88,18 @@ const About = () => {
       }, 10000);
     };
 
-    // const unsubscribeItemTransferred = openseaClient?.onItemTransferred(collectionSlug, handleItemTransferred);
-    // const unsubscribeItemListed = openseaClient?.onItemListed(collectionSlug, handleItemListed);
-    // const unsubscribeCollectionOffer = openseaClient?.onCollectionOffer(collectionSlug, () =>
-    //   debounceTimer === null ? handleCollectionOfferMade() : () => {}
-    // );
+    openSeaClient.subscribe("item_listed", handleItemListed);
+    openSeaClient.subscribe("item_sold", handleItemSold);
+    openSeaClient.subscribe("collection_offer", () => (debounceTimer === null ? handleCollectionOffer() : () => {}));
+    openSeaClient.connect();
 
     return () => {
-      // unsubscribeItemTransferred?.();
-      // unsubscribeItemListed?.();
-      // unsubscribeCollectionOffer?.();
+      openSeaClient.unsubscribe("item_listed");
+      openSeaClient.unsubscribe("item_sold");
+      openSeaClient.unsubscribe("collection_offer");
+
+      openSeaClient.disconnect();
+
       if (debounceTimer) {
         clearTimeout(debounceTimer);
       }
