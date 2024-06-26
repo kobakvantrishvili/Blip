@@ -28,7 +28,7 @@ const About = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const collectionSlug = "lilpudgys";
+  const collectionSlug = "momoguro-holoself";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
   const topBid = collectionTopBid;

@@ -3,16 +3,19 @@ import PropertyBar from "@/components/main/parameters/PropertyBar";
 import useNftCollectionTraits from "@/hooks/useNftCollectionTraits";
 import { useEffect, useState } from "react";
 import { CollectionTraits } from "@/services/models/types";
-import CheckboxItem from "./CheckBoxItem";
+import CheckboxItem from "@/components/main/parameters/CheckBoxItem";
 import Button from "@/components/shared/Button";
+import Range from "@/components/main/parameters/Range";
 
 interface SelectedTrait {
   category: string;
-  type: string;
+  type?: string;
+  from?: number;
+  to?: number;
 }
 
 const Traits = () => {
-  const collectionSlug = "lilpudgys";
+  const collectionSlug = "momoguro-holoself";
 
   const [collectionTraits, setCollectionTraits] = useState<CollectionTraits | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +28,6 @@ const Traits = () => {
       try {
         const collectionTraitsData = await useNftCollectionTraits(collectionSlug);
         setCollectionTraits(collectionTraitsData);
-
         setError(null);
       } catch (error) {
         console.error("Error fetching NFT Collection traits:", error);
@@ -42,16 +44,23 @@ const Traits = () => {
     setOpenCategory(openCategory === category ? null : category);
   };
 
-  const handleCheckboxChange = (category: string, type: string, checked: boolean) => {
-    if (checked) {
+  const handleCheckboxChange = (category: string, type: string, isChecked: boolean) => {
+    if (isChecked) {
       setSelectedTraits([...selectedTraits, { category, type }]);
     } else {
       setSelectedTraits(selectedTraits.filter((trait) => !(trait.category === category && trait.type === type)));
     }
   };
 
+  const handleSliderChange = (category: string, from: number, to: number, isSet: boolean) => {};
+
   const isCheckboxChecked = (category: string, type: string) => {
     return selectedTraits.some((trait) => trait.type === type && trait.category === category);
+  };
+
+  const getCurrentRange = (category: string): [number | undefined, number | undefined] => {
+    const trait = selectedTraits.find((trait) => trait.category === category);
+    return [trait?.from, trait?.to];
   };
 
   const isCategorySelected = (category: string) => {
@@ -86,17 +95,40 @@ const Traits = () => {
                 onClick={() => handlePropertyBarClick(category)}
               />
               {openCategory === category && (
-                <div className="max-h-60 overflow-y-auto ">
-                  {Object.entries(collectionTraits.counts[category]).map(([type, count]) => (
-                    <CheckboxItem
-                      key={type}
-                      type={type}
-                      count={count}
-                      category={category}
-                      onChange={handleCheckboxChange}
-                      isChecked={isCheckboxChecked(category, type)}
-                    />
-                  ))}
+                <div className="max-h-60 overflow-y-auto">
+                  {(() => {
+                    const minMax = {
+                      min: collectionTraits.counts[category]["min"],
+                      max: collectionTraits.counts[category]["max"],
+                    };
+                    const hasMinMax = minMax.min !== undefined && minMax.max !== undefined;
+
+                    return (
+                      <>
+                        {hasMinMax ? (
+                          <Range
+                            key={`${category}-slider`}
+                            min={minMax.min}
+                            max={minMax.max}
+                            category={category}
+                            onChange={handleSliderChange}
+                            currentRange={getCurrentRange(category)}
+                          />
+                        ) : (
+                          Object.entries(collectionTraits.counts[category]).map(([type, count]) => (
+                            <CheckboxItem
+                              key={type}
+                              type={type}
+                              count={count}
+                              category={category}
+                              onChange={handleCheckboxChange}
+                              isChecked={isCheckboxChecked(category, type)}
+                            />
+                          ))
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               )}
             </div>
