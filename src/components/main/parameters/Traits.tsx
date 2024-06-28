@@ -52,7 +52,22 @@ const Traits = () => {
     }
   };
 
-  const handleSliderChange = (category: string, from: number, to: number, isSet: boolean) => {};
+  const handleRangeChange = (category: string, from: number, to: number, isSet: boolean) => {
+    if (isSet) {
+      const updatedTraits = [...selectedTraits];
+      const traitIndex = updatedTraits.findIndex((trait) => trait.category === category);
+
+      if (traitIndex !== -1) {
+        updatedTraits[traitIndex] = { ...updatedTraits[traitIndex], from, to };
+      } else {
+        updatedTraits.push({ category, from, to });
+      }
+
+      setSelectedTraits(updatedTraits);
+    } else {
+      setSelectedTraits(selectedTraits.filter((trait) => trait.category !== category));
+    }
+  };
 
   const isCheckboxChecked = (category: string, type: string) => {
     return selectedTraits.some((trait) => trait.type === type && trait.category === category);
@@ -107,11 +122,11 @@ const Traits = () => {
                       <>
                         {hasMinMax ? (
                           <Range
-                            key={`${category}-slider`}
+                            key={`${category}-Range`}
                             min={minMax.min}
                             max={minMax.max}
                             category={category}
-                            onChange={handleSliderChange}
+                            onChange={handleRangeChange}
                             currentRange={getCurrentRange(category)}
                           />
                         ) : (
