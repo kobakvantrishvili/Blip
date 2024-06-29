@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { BsCopy, BsTwitterX, BsInstagram, BsDiscord, BsGlobe2 } from "react-icons/bs";
@@ -12,23 +10,36 @@ import { handleCopy } from "@/utils/handleCopy";
 import { NftCollection, NftCollectionStats } from "@/services/models/types";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
-import Stat from "@/components/about/Stat";
+import Stat from "@/components/collection/about/Stat";
 import useNftCollectionStats from "@/hooks/useNftCollectionStats";
 import useNftCollection from "@/hooks/useNftCollection";
 import useNftCollectionTopBid from "@/hooks/useNftCollectionTopBid";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import OpenSeaClient from "@/client/openseaClient";
 
-const About = () => {
-  const [collection, setCollection] = useState<NftCollection | null>(null);
-  const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
-  const [collectionTopBid, setCollectionTopBid] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+type AboutProps = {
+  collectionSlug: string;
+  collection: NftCollection | null;
+  collectionStats: NftCollectionStats | null;
+  collectionTopBid: number | null;
+  setCollectionStats: React.Dispatch<React.SetStateAction<NftCollectionStats | null>>;
+  setCollectionTopBid: React.Dispatch<React.SetStateAction<number | null>>;
+  error: string | null;
+  isLoading: boolean;
+};
+
+const About: React.FC<AboutProps> = ({
+  collectionSlug,
+  collection,
+  collectionStats,
+  collectionTopBid,
+  setCollectionStats,
+  setCollectionTopBid,
+  error,
+  isLoading,
+}) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const collectionSlug = "momoguro-holoself";
 
   const floorPrice = collectionStats?.total?.floor_price_symbol === "ETH" ? collectionStats?.total?.floor_price : undefined;
   const topBid = collectionTopBid;
@@ -46,28 +57,7 @@ const About = () => {
 
   const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
 
-  const fetchNftCollectionData = useCallback(async () => {
-    try {
-      const [collectionData, collectionStatsData, collectionTopBid] = await Promise.all([
-        useNftCollection(collectionSlug),
-        useNftCollectionStats(collectionSlug),
-        useNftCollectionTopBid(collectionSlug),
-      ]);
-      setCollection(collectionData);
-      setCollectionStats(collectionStatsData);
-      setCollectionTopBid(collectionTopBid);
-
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching NFT data:", error);
-      setError("Failed to fetch NFT Collection data. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    fetchNftCollectionData();
     const openSeaClient = new OpenSeaClient({ collectionSlug });
     let debounceTimer: NodeJS.Timeout | null = null;
 
@@ -104,7 +94,7 @@ const About = () => {
         clearTimeout(debounceTimer);
       }
     };
-  }, [collectionSlug, fetchNftCollectionData]);
+  }, [collectionSlug]);
 
   const getVolumeChangeColor = (volumeChange: number | undefined): string => {
     if (volumeChange) {

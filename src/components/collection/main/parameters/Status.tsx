@@ -1,7 +1,5 @@
-// components/main/parameters/RadioButtonGroup.tsx
-
 import React, { useState } from "react";
-import RadioButton from "./RadioButton"; // Adjust the import path as per your directory structure
+import RadioButton from "@/components/shared/RadioButton"; // Adjust the import path as per your directory structure
 
 const Status: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>("BUY NOW");

@@ -1,15 +1,11 @@
-import About from "@/components/about/About";
 import Nav from "@/components/nav/Nav";
-import Main from "@/components/main/Main";
+import Collection from "@/components/collection/Collection";
 
 export default function Page() {
   return (
     <div className={`bg-dark-bg min-h-screen flex flex-col`}>
       <Nav />
-      <About />
-      <div className="flex flex-1">
-        <Main />
-      </div>
+      <Collection />
     </div>
   );
 }
