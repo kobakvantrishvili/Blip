@@ -6,7 +6,7 @@ import { useAccount, useDisconnect } from "wagmi";
 
 import Link from "@/components/shared/Link";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import SearchBar from "@/components/nav/navbar/SearchBar";
+import SearchBar from "@/components/shared/SearchBar";
 import LanguageSelectButton from "@/components/nav/navbar/LanguageSelectButton";
 import ConnectButton from "@/components/nav/ConnectButton";
 import UserMenuButton from "@/components/nav/UserMenuButton";
@@ -79,7 +79,9 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
         )}
 
         {/* MIDDLE */}
-        {isAboveLargeScreens && <SearchBar className="border rounded border-dark-border h-9 p-2" barWidth="w-56" />}
+        {isAboveLargeScreens && (
+          <SearchBar className="border rounded border-dark-border h-9 p-2" barWidth="w-56" placeholder="Collections, wallets, or ENS" icon={FiX} />
+        )}
         {!isAboveMediumScreens && (
           <a className={`text-secondary-accent font-blip text-3xl relative top-[6px]`} href="/">
             BRRRR
@@ -109,9 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
             {isAboveMediumScreens && (
               <>
                 {!isConnected ? (
-                  <ConnectButton className={`px-8 py-1 gap-1 rounded-r border-y border-r border-tertiary-accent`}>
-                    CONNECT WALLET
-                  </ConnectButton>
+                  <ConnectButton className={`px-8 py-1 gap-1 rounded-r border-y border-r border-tertiary-accent`}>CONNECT WALLET</ConnectButton>
                 ) : (
                   <>
                     <EthBalanceDisplay
@@ -132,11 +132,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
                         >
                           Copy Address
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          icon={FiLogOut}
-                          onClick={() => disconnect()}
-                          className="text-text-secondary border-b border-dark-border"
-                        >
+                        <DropdownMenuItem icon={FiLogOut} onClick={() => disconnect()} className="text-text-secondary border-b border-dark-border">
                           Disconnect
                         </DropdownMenuItem>
                       </DropDownMenu>

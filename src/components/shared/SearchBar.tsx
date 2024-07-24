@@ -1,12 +1,15 @@
 import React, { useState, useRef } from "react";
-import { FiSearch, FiX } from "react-icons/fi";
+import { IconType } from "react-icons";
+import { FiSearch } from "react-icons/fi";
 
 interface SearchBarProps {
   className?: string;
   barWidth: string;
+  placeholder?: string;
+  icon?: IconType;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder, icon: Icon }) => {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -26,14 +29,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth }) => {
       <input
         ref={inputRef}
         type="text"
-        placeholder="Collections, wallets, or ENS"
+        placeholder={placeholder}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         className={`bg-dark-bg text-text-primary placeholder-text-tertiary focus:outline-none flex-grow ${barWidth} min-w-[80px]`}
       />
-      <button onClick={handleClearInput} className="px-1 py-1">
-        <FiX className={`text-text-secondary hover:text-primary-accent cursor-pointer text-2xl`} />
-      </button>
+      {Icon && (
+        <button onClick={handleClearInput} className="px-1 py-1">
+          <Icon className={`text-text-secondary hover:text-primary-accent cursor-pointer text-2xl`} />
+        </button>
+      )}
     </div>
   );
 };

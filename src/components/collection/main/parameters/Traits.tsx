@@ -76,7 +76,7 @@ const Traits: React.FC<TraitsProps> = ({ collectionTraits, error, isLoading }) =
           <div className={`flex flex-row items-center justify-between px-3 ${isLoading ? "blur" : ""}`}>
             <div className="flex flex-row items-center gap-2">
               <GoTasklist className="text-3xl text-text-secondary" />
-              <div className=" text-text-primary text-lg">TRAITS</div>
+              <div className=" text-text-primary text-lg tracking-wider">TRAITS</div>
             </div>
             {selectedTraits.length > 0 && (
               <Button className="text-tertiary-accent text-base text-shadow-custom" onClick={clearSelectedTraits}>
