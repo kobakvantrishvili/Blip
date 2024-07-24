@@ -32,7 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder,
         placeholder={placeholder}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className={`bg-dark-bg text-text-primary placeholder-text-tertiary focus:outline-none flex-grow ${barWidth} min-w-[80px]`}
+        className={`bg-dark-bg text-text-primary placeholder-text-tertiary focus:outline-none flex-grow ${barWidth}`}
       />
       {Icon && (
         <button onClick={handleClearInput} className="px-1 py-1">

@@ -10,7 +10,7 @@ import useNftCollectionTraits from "@/hooks/useNftCollectionTraits";
 import { NftCollection, NftCollectionStats, CollectionTraits } from "@/services/models/types";
 
 const Collection: React.FC = () => {
-  const collectionSlug = "momoguro-holoself";
+  const collectionSlug = "lilpudgys";
 
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);

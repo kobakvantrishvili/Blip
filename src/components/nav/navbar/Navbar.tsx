@@ -80,7 +80,12 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
 
         {/* MIDDLE */}
         {isAboveLargeScreens && (
-          <SearchBar className="border rounded border-dark-border h-9 p-2" barWidth="w-56" placeholder="Collections, wallets, or ENS" icon={FiX} />
+          <SearchBar
+            className="border rounded border-dark-border h-9 p-2"
+            barWidth="w-56 min-w-20"
+            placeholder="Collections, wallets, or ENS"
+            icon={FiX}
+          />
         )}
         {!isAboveMediumScreens && (
           <a className={`text-secondary-accent font-blip text-3xl relative top-[6px]`} href="/">
