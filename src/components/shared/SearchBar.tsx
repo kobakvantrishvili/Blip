@@ -6,10 +6,11 @@ interface SearchBarProps {
   className?: string;
   barWidth: string;
   placeholder?: string;
+  iconSize?: string;
   icon?: IconType;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder, icon: Icon }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder, iconSize, icon: Icon }) => {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,7 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder,
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <div onClick={handleFocusInput} className={"cursor-pointer px-1 py-1"}>
-        <FiSearch className={`text-text-secondary text-2xl`} />
+        <FiSearch className={`text-text-secondary ${iconSize ? iconSize : "text-2xl"}`} />
       </div>
       <input
         ref={inputRef}
@@ -36,7 +37,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder,
       />
       {Icon && (
         <button onClick={handleClearInput} className="px-1 py-1">
-          <Icon className={`text-text-secondary hover:text-primary-accent cursor-pointer text-2xl`} />
+          <Icon className={`text-text-secondary hover:text-primary-accent cursor-pointer ${iconSize ? iconSize : "text-2xl"}`} />
         </button>
       )}
     </div>

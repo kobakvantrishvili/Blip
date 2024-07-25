@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import Status from "@/components/collection/main/parameters/Status";
-import PriceBar from "@/components/collection/main/parameters/PriceBar";
-import Traits from "@/components/collection/main/parameters/Traits";
+import Status from "@/components/collection/main/leftPanel/Status";
+import PriceBar from "@/components/collection/main/leftPanel/PriceBar";
+import Traits from "@/components/collection/main/leftPanel/Traits";
 import { CollectionTraits } from "@/services/models/types";
 import useComponentHeight from "@/hooks/useComponentHeight";
 

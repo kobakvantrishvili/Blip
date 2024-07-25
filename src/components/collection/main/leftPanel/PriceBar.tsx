@@ -1,6 +1,6 @@
 import React from "react";
 import PropertyBar from "@/components/shared/PropertyBar";
-import PriceRangeInput from "@/components/collection/main/parameters/PriceRangeInput";
+import PriceRangeInput from "@/components/collection/main/leftPanel/PriceRangeInput";
 
 type PriceBarProps = {
   isPriceOpen: boolean;

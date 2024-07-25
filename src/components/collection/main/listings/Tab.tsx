@@ -1,16 +1,24 @@
 import React from "react";
+import Button from "@/components/shared/Button";
 
 type TabProps = {
   text: string;
+  isSelected: boolean;
+  onClick: () => void;
   Icon: React.ElementType;
 };
 
-const Tab: React.FC<TabProps> = ({ text, Icon }) => {
+const Tab: React.FC<TabProps> = ({ text, isSelected, onClick, Icon }) => {
   return (
-    <div className="flex flex-row gap-2">
-      <Icon className="text-2xl text-text-secondary" />
-      <p className="text-text-secondary tracking-wider">{text}</p>
-    </div>
+    <Button
+      className={`flex flex-row gap-2 pb-5 items-center ${
+        isSelected ? "text-primary-accent border-b border-primary-accent shadow-custom" : "text-text-secondary hover:text-text-primary"
+      }`}
+      onClick={onClick}
+    >
+      <Icon className="text-xl" />
+      <p className="tracking-wider text-base">{text}</p>
+    </Button>
   );
 };
 
