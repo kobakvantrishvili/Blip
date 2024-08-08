@@ -3,6 +3,7 @@ import React from "react";
 import { CollectionTraits } from "@/services/models/types";
 import Listings from "@/components/collection/main/listings/Listings";
 import LeftPanel from "@/components/collection/main/leftPanel/LeftPanel";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 type MainProps = {
   collectionSlug: string;
@@ -12,15 +13,21 @@ type MainProps = {
 };
 
 const Main: React.FC<MainProps> = ({ collectionSlug, collectionTraits, error, isLoading }) => {
-  return (
-    <main className="flex justify-between flex-row flex-1 font-jockey h-[calc(100dvh-149px)]">
+  const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
+
+  return isAboveLargeScreens ? (
+    <main className="flex justify-between flex-row flex-1 font-jockey overflow-x-auto h-[calc(100dvh-149px)]">
       {/* STATUS & TRAITS  */}
       <LeftPanel collectionTraits={collectionTraits} error={error} isLoading={isLoading} />
       {/* LISTINGS  */}
-      <Listings />
+      <div className="flex flex-1 overflow-x-auto">
+        <Listings />
+      </div>
       {/* ACTIVITY  */}
-      <div className="max-w-[400px] 2xl:max-w-[420px] min-w-[350px] flex-1 bg-yellow-400 flex-shrink">ACTIVITY</div>
+      <div className="min-w-[350px] w-1/5 bg-yellow-400">ACTIVITY</div>
     </main>
+  ) : (
+    <Listings />
   );
 };
 

@@ -22,7 +22,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ collectionTraits, error, isLoadin
   };
 
   return (
-    <div className="max-w-[300px] 2xl:max-w-[320px] min-w-[250px] flex-1 border-r border-dark-border h-full">
+    <div className="min-w-[250px] w-1/6 border-r border-dark-border h-full">
       <div ref={pricePanelRef} className="flex flex-col gap-4 px-3 py-6 border-b border-dark-border">
         <Status />
         <PriceBar isPriceOpen={isPriceOpen} handlePriceBarClick={handlePriceBarClick} />
