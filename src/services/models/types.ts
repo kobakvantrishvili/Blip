@@ -56,6 +56,7 @@ export type NftListing = {
   offerer: string;
   startTime: string;
   endTime: string;
+  orderType: number;
 };
 
 export type NftSaleEvent = {

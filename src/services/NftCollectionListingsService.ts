@@ -41,10 +41,11 @@ class NftCollectionListingsService {
                 currency: price.current.currency,
                 value: Number(price.current.value) / 10 ** price.current.decimals,
               },
-              offerer: protocol_data.parameters.offerer,
               offer: protocol_data.parameters.offer,
+              offerer: protocol_data.parameters.offerer,
               startTime: protocol_data.parameters.startTime,
               endTime: protocol_data.parameters.endTime,
+              orderType: protocol_data.parameters.orderType,
             };
 
             listings.push(processedListing);

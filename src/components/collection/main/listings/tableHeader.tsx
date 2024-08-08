@@ -10,7 +10,7 @@ type TableHeaderProps = {
 const TableHeader: React.FC<TableHeaderProps> = ({ text, width, className, onClick }) => {
   return (
     <th
-      className={`px-4 text-sm font-normal text-text-secondary tracking-wider text-nowrap flex-none ${className}`}
+      className={`px-4 text-sm font-normal text-text-secondary tracking-widest text-nowrap flex-none ${className}`}
       style={{ flexBasis: width }}
       onClick={onClick}
     >

@@ -1,6 +1,6 @@
 import { CollectionTraits } from "@/services/models/types";
 
-const useNftCollectionTraits = async (collectionSlug: string): Promise<any> => {
+const nftCollectionTraitsGetter = async (collectionSlug: string): Promise<any> => {
   const response = await fetch(`/api/getNftCollectionTraits?collectionSlug=${collectionSlug}`);
   if (!response.ok) {
     throw new Error("Failed to fetch collection traits");
@@ -11,4 +11,4 @@ const useNftCollectionTraits = async (collectionSlug: string): Promise<any> => {
   return data;
 };
 
-export default useNftCollectionTraits;
+export default nftCollectionTraitsGetter;

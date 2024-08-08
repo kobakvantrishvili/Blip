@@ -11,9 +11,8 @@ import { NftCollection, NftCollectionStats } from "@/services/models/types";
 import Link from "@/components/shared/Link";
 import Button from "@/components/shared/Button";
 import Stat from "@/components/collection/about/Stat";
-import useNftCollectionStats from "@/hooks/useNftCollectionStats";
-import useNftCollection from "@/hooks/useNftCollection";
-import useNftCollectionTopBid from "@/hooks/useNftCollectionTopBid";
+import nftCollectionStatsGetter from "@/data/getters/nftCollectionStatsGetter";
+import nftCollectionTopBidGetter from "@/data/getters/nftCollectionTopBidGetter";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import OpenSeaClient from "@/client/openseaClient";
 
@@ -62,16 +61,16 @@ const About: React.FC<AboutProps> = ({
     let debounceTimer: NodeJS.Timeout | null = null;
 
     const handleItemListed = async () => {
-      await useNftCollectionStats(collectionSlug).then(setCollectionStats);
+      await nftCollectionStatsGetter(collectionSlug).then(setCollectionStats);
     };
 
     const handleItemSold = async () => {
-      await useNftCollectionStats(collectionSlug).then(setCollectionStats);
+      await nftCollectionStatsGetter(collectionSlug).then(setCollectionStats);
     };
 
     const handleCollectionOffer = async () => {
       if (debounceTimer) return;
-      await useNftCollectionTopBid(collectionSlug).then(setCollectionTopBid);
+      await nftCollectionTopBidGetter(collectionSlug).then(setCollectionTopBid);
 
       debounceTimer = setTimeout(async () => {
         debounceTimer = null;
