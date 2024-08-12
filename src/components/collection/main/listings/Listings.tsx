@@ -44,7 +44,7 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
               <table className="min-w-full table-fixed">
                 <thead className="sticky top-0 bg-dark-bg">
                   <tr className="h-10">
-                    <TableHeader text="X LISTED" width="24%" className="text-start" />
+                    <TableHeader text="LISTING" width="24%" className="text-start" />
                     <TableHeader text="RARITY" width="10%" />
                     <TableHeader text="BUY NOW" width="14%" />
                     <TableHeader text="LAST SALE" width="10%" />
@@ -57,11 +57,20 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
                 <tbody>
                   {collectionListings?.map((listing) => (
                     <tr key={listing.order_hash}>
-                      <TableData text={listing.offer[0].identifierOrCriteria} width="24%" className="text-start" />
-                      <TableData text="RARITY" width="10%" />
+                      <TableData text={listing.token?.name || ""} width="24%" className="text-start" />
+                      <TableData text={listing.token?.rarity.rank?.toLocaleString() || "N/A"} width="10%" />
                       <TableData text={`${listing.price.value.toFixed(4)} ${listing.price.currency}`} width="14%" />
-                      <TableData text={`${listing.price.value.toFixed(4)} ${listing.price.currency}`} width="10%" />
-                      <TableData text={`${listing.price.value.toFixed(4)} ${listing.price.currency}`} width="10%" />
+                      <TableData
+                        text={`${
+                          typeof listing.token?.last_sale.unit_price === "number"
+                            ? (listing.token?.last_sale.unit_price / Math.pow(10, listing.token?.last_sale.payment_token?.decimals || 18)).toFixed(
+                                4
+                              )
+                            : "0"
+                        } ${listing.token?.last_sale.payment_token?.symbol || "ETH"}`}
+                        width="10%"
+                      />
+                      <TableData text={`0 ETH`} width="10%" />
                       <TableData text={`${listing.offerer.slice(2, 7)}...`} width="10%" />
                       <TableData text="#HELD" width="10%" />
                       <TableData text={formatTimeAgo(listing.startTime)} width="12%" />

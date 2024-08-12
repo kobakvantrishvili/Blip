@@ -1,4 +1,6 @@
 import { fetchNftCollectionOffers } from "@/services/external/fetchNftCollectionOffers";
+import { fetchNftBestOffer } from "@/services/external/fetchNftBestOffer";
+import { NftTopBid } from "@/services/models/types";
 
 interface ServiceResponse<T> {
   status: number;
@@ -31,6 +33,34 @@ class NftCollectionOffersService {
           break;
         }
       }
+
+      return { status: 200, data: topBid };
+    } catch (error) {
+      if (error instanceof Error) {
+        return { status: 500, error: error.message };
+      } else {
+        return { status: 500, error: "An unknown error occurred" };
+      }
+    }
+  }
+
+  public async getNftTopBid(nftId: string): Promise<ServiceResponse<NftTopBid>> {
+    try {
+      const response = await fetchNftBestOffer(this.collectionSlug, nftId);
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { status: response.status, error: data };
+      }
+
+      const priceValue = Number(data.price.value) / 10 ** data.price.decimals;
+      const topBid: NftTopBid = {
+        currency: data.price.currency,
+        value: priceValue,
+        offerer: data.protocol_data.parameters.offerer,
+        startTime: data.protocol_data.parameters.startTime,
+        endTime: data.protocol_data.parameters.endTime,
+      };
 
       return { status: 200, data: topBid };
     } catch (error) {

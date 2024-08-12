@@ -2,7 +2,7 @@ import NftCollectionListingsService from "@/services/NftCollectionListingsServic
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { collectionSlug, limit = "100", orderType, next } = req.query;
+  const { collectionSlug, contractAddress, limit = "100", orderType, next } = req.query;
 
   if (typeof collectionSlug !== "string") {
     res.status(400).json({ error: "Invalid collection slug" });
@@ -16,13 +16,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(400).json({ error: "Invalid order type" });
     return;
   }
+  if (typeof contractAddress !== "string") {
+    res.status(400).json({ error: "Invalid contract address" });
+    return;
+  }
 
   const parsedLimit = parseInt(limit, 10);
   const chosenOrderType = parseInt(orderType, 10);
 
   try {
-    const nftListingsService = new NftCollectionListingsService(collectionSlug);
-    const { status, data, error } = await nftListingsService.getNftListingsByType(chosenOrderType, parsedLimit, next as string);
+    const nftListingsService = new NftCollectionListingsService(collectionSlug, contractAddress);
+    const { status, data, error } = await nftListingsService.getNftListingsDetails(chosenOrderType, parsedLimit, next as string);
 
     if (status === 200) {
       res.status(200).json(data);

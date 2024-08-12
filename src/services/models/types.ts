@@ -57,6 +57,7 @@ export type NftListing = {
   startTime: string;
   endTime: string;
   orderType: number;
+  token?: NftToken;
 };
 
 export type NftSaleEvent = {
@@ -97,4 +98,57 @@ export type CollectionTraits = {
 
 export type TraitCounts = {
   [type: string]: number;
+};
+
+export type NftTopBid = {
+  currency: string;
+  value: number;
+  offerer: string;
+  startTime: string;
+  endTime: string;
+};
+
+export type NftToken = {
+  token_id: string;
+  name: string;
+  previews: {
+    image_small_url: string;
+    image_medium_url: string;
+    image_large_url: string;
+    image_opengraph_url: string;
+  };
+  owners: Array<{
+    owner_address: string;
+    first_acquired_date: string;
+  }>;
+  last_sale: {
+    from_address: string;
+    to_address: string;
+    timestamp: string;
+    transaction: string;
+    marketplace_id: string;
+    marketplace_name: string;
+    payment_token: {
+      payment_token_id: string;
+      name: string;
+      symbol: string | null;
+      address: string;
+      decimals: number;
+    };
+    unit_price: number;
+    total_price: number;
+    unit_price_usd_cents: number;
+  };
+  rarity: {
+    rank: number;
+    score: number;
+    unique_attributes: number;
+  };
+  extra_metadata: {
+    attributes: Array<{
+      trait_type: string;
+      value: string;
+      display_type: string | null;
+    }>;
+  };
 };

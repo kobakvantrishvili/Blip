@@ -12,6 +12,7 @@ import { NftCollection, NftCollectionStats, CollectionTraits, NftListing } from 
 
 const Collection: React.FC = () => {
   const collectionSlug = "lilpudgys";
+  const contractAddress = "0x524cab2ec69124574082676e6f654a18df49a048";
 
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
@@ -35,7 +36,7 @@ const Collection: React.FC = () => {
           nftCollectionStatsGetter(collectionSlug),
           nftCollectionTopBidGetter(collectionSlug),
           nftCollectionTraitsGetter(collectionSlug),
-          nftCollectionListingsGetter(collectionSlug, "100", OrderType.BUY_NOW),
+          nftCollectionListingsGetter(collectionSlug, contractAddress, "50", OrderType.BUY_NOW),
         ]);
 
         setCollection(collectionData);
