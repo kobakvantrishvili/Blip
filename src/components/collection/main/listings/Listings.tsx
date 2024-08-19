@@ -54,7 +54,7 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
           <div className="block w-full h-full overflow-y-auto overflow-x-auto">
             <table className="min-w-full table-fixed h-full">
               <thead className="sticky top-0 bg-dark-bg">
-                <div className="absolute inset-x-0 top-0 border-b border-dark-border"></div>
+                <tr className="absolute inset-x-0 top-0 border-b border-dark-border"></tr>
                 <tr className="h-10">
                   <TableHeader width="25%" className="text-start">
                     LISTING
@@ -68,7 +68,7 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
                     <BsClockHistory className="text-xl" />
                   </TableHeader>
                 </tr>
-                <div className="absolute inset-x-0 bottom-0 border-t border-dark-border"></div>
+                <tr className="absolute inset-x-0 bottom-0 border-t border-dark-border"></tr>
               </thead>
               <tbody>
                 <tr className="h-2">
