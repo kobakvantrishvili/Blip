@@ -1,9 +1,11 @@
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 
-export const formatTimeAgo = (timestamp: string) => {
+export const formatTimePast = (timestamp: string) => {
   const now = Date.now();
   const past = fromUnixTime(Number(timestamp)).getTime();
   const difference = now - past; // Difference in milliseconds
+
+  if (difference < 0) return "N/A";
 
   const minutes = Math.floor(difference / (1000 * 60));
   const hours = Math.floor(difference / (1000 * 60 * 60));
@@ -34,5 +36,5 @@ export const formatTimeAgo = (timestamp: string) => {
     value = Math.floor(difference / 1000);
   }
 
-  return `${value}${unit} ago`;
+  return `${value}${unit}`;
 };

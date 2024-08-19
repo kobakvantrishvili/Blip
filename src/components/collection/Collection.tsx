@@ -69,7 +69,7 @@ const Collection: React.FC = () => {
         error={error}
         isLoading={isLoading}
       />
-      <div className="flex flex-1">
+      <div className="flex flex-1 h-[calc(100dvh-149px)]">
         <Main
           collectionSlug={collectionSlug}
           collectionTraits={collectionTraits}

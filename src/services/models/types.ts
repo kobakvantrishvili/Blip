@@ -119,7 +119,7 @@ export type NftToken = {
   };
   owners: Array<{
     owner_address: string;
-    first_acquired_date: string;
+    last_acquired_date: string;
   }>;
   last_sale: {
     from_address: string;

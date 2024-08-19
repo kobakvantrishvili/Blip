@@ -17,7 +17,7 @@ const Main: React.FC<MainProps> = ({ collectionSlug, collectionTraits, collectio
   const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
 
   return isAboveLargeScreens ? (
-    <main className="flex justify-between flex-row flex-1 font-jockey overflow-x-auto h-[calc(100dvh-149px)]">
+    <main className="flex justify-between flex-row flex-1 font-jockey overflow-x-auto h-full">
       {/* STATUS & TRAITS  */}
       <LeftPanel collectionTraits={collectionTraits} error={error} isLoading={isLoading} />
       {/* LISTINGS  */}

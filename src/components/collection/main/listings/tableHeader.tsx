@@ -1,20 +1,20 @@
-import React from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 type TableHeaderProps = {
-  text: string;
+  children: ReactNode;
   width: string;
   className?: string;
   onClick?: () => void;
 };
 
-const TableHeader: React.FC<TableHeaderProps> = ({ text, width, className, onClick }) => {
+const TableHeader: React.FC<TableHeaderProps> = ({ children, width, className, onClick }) => {
   return (
     <th
       className={`px-4 text-sm font-normal text-text-secondary tracking-widest text-nowrap flex-none ${className}`}
       style={{ flexBasis: width }}
       onClick={onClick}
     >
-      {text}
+      {children}
     </th>
   );
 };
