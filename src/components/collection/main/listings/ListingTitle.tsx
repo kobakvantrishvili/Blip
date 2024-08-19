@@ -17,7 +17,7 @@ const ListingTitle: React.FC<ListingProps> = ({ tokenImageUrl, tokenName, isChec
         className="h-[15px] w-[15px] flex-none appearance-none rounded-sm border border-text-tertiary checked:bg-primary-accent focus:outline-none"
       />
       <img src={tokenImageUrl} alt={tokenName} className="w-12 h-12 rounded-md" />
-      <span className="text-white">{`L11 ${tokenName}`}</span>
+      <span className="text-white">{`${tokenName}`}</span>
     </div>
   );
 };
