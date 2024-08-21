@@ -53,7 +53,7 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
           />
         </div>
         <div className="w-full h-[calc(100%-45px)]">
-          <div className="block w-full h-full overflow-y-auto overflow-x-auto">
+          <div className="block w-full h-full overflow-y-auto overflow-x-auto scrollbar-hide">
             <table className="min-w-full table-fixed h-full">
               <thead className="sticky top-0 bg-dark-bg">
                 <tr className="absolute inset-x-0 top-0 border-b border-dark-border"></tr>
