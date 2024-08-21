@@ -5,7 +5,7 @@ export const formatTimePast = (timestamp: string) => {
   const past = fromUnixTime(Number(timestamp)).getTime();
   const difference = now - past; // Difference in milliseconds
 
-  if (difference < 0) return "N/A";
+  if (difference < 0) return "—";
 
   const minutes = Math.floor(difference / (1000 * 60));
   const hours = Math.floor(difference / (1000 * 60 * 60));

@@ -12,7 +12,8 @@ import { NftListing } from "@/services/models/types";
 import { formatTimePast } from "@/utils/formatTimePast";
 import ListingTitle from "@/components/collection/main/listings/ListingTitle";
 import ListingBuy from "@/components/collection/main/listings/ListingBuy";
-import Button from "@/components/shared/Button";
+import LastSale from "@/components/collection/main/listings/LastSale";
+import Rarity from "./Rarity";
 
 type ListingsProps = {
   collectionSlug: string;
@@ -84,29 +85,18 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
                         onToggleCheck={() => toggleCheck(listing.order_hash)}
                       />
                     </TableData>
-                    <TableData width="12%">{listing.token?.rarity.rank?.toLocaleString() || "N/A"}</TableData>
+                    <TableData width="12%">
+                      <Rarity rank={listing.token?.rarity?.rank} distinctNftCount={listing.token?.collection?.distinct_nft_count} />
+                    </TableData>
                     <TableData width="15%">
                       <ListingBuy price={listing.price.value} currency={listing.price.currency} />
                     </TableData>
                     <TableData width="12%">
-                      {(() => {
-                        const symbol = listing.token?.last_sale?.payment_token?.symbol?.toUpperCase() || "ETH";
-                        const price =
-                          typeof listing.token?.last_sale?.unit_price === "number"
-                            ? (listing.token?.last_sale?.unit_price / Math.pow(10, listing.token?.last_sale.payment_token?.decimals || 18)).toFixed(
-                                4
-                              )
-                            : "0";
-
-                        return (
-                          <>
-                            <span>{`${price}`}</span>
-                            {symbol === "ETH" || symbol === "WETH" ? (
-                              <LiaEthereum className="inline-block text-lg ml-[2px] text-text-secondary" />
-                            ) : null}
-                          </>
-                        );
-                      })()}
+                      <LastSale
+                        unitPrice={listing.token?.last_sale?.unit_price}
+                        paymentTokenSymbol={listing.token?.last_sale?.payment_token?.symbol}
+                        decimals={listing.token?.last_sale?.payment_token?.decimals}
+                      />
                     </TableData>
                     <TableData width="12%">{`${listing.offerer.slice(2, 7)}...`}</TableData>
                     <TableData width="12%">

@@ -121,6 +121,9 @@ export type NftToken = {
     owner_address: string;
     last_acquired_date: string;
   }>;
+  collection: {
+    distinct_nft_count: number;
+  };
   last_sale: {
     from_address: string;
     to_address: string;
