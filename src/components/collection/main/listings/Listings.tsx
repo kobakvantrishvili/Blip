@@ -13,7 +13,8 @@ import { formatTimePast } from "@/utils/formatTimePast";
 import ListingTitle from "@/components/collection/main/listings/ListingTitle";
 import ListingBuy from "@/components/collection/main/listings/ListingBuy";
 import LastSale from "@/components/collection/main/listings/LastSale";
-import Rarity from "./Rarity";
+import Rarity from "@/components/collection/main/listings/Rarity";
+import Owner from "@/components/collection/main/listings/Owner";
 
 type ListingsProps = {
   collectionSlug: string;
@@ -98,7 +99,9 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
                         decimals={listing.token?.last_sale?.payment_token?.decimals}
                       />
                     </TableData>
-                    <TableData width="12%">{`${listing.offerer.slice(2, 7)}...`}</TableData>
+                    <TableData width="12%">
+                      <Owner address={listing.offerer} />
+                    </TableData>
                     <TableData width="12%">
                       {listing.token?.owners[0]?.last_acquired_date
                         ? formatTimePast(Math.floor(new Date(listing.token.owners[0].last_acquired_date).getTime() / 1000).toString())
