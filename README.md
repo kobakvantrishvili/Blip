@@ -29,16 +29,15 @@ Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, 
    git clone https://github.com/your-username/blip
    cd blip
    ```
-3. Clone the repo:
-  ```bash
-    npm install
-  ```
+2. Install Dependencies:
+     ```bash
+     npm install
+     ```
 3. Run the development server:
-
-```bash
-Copy code
-npm run dev
-```
+   ```bash
+   Copy code
+   npm run dev
+   ```
 4. Open http://localhost:3000 in your browser to see your Blip clone live!
 
 ## Wallet Integration 💰
