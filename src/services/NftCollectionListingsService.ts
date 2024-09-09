@@ -136,9 +136,9 @@ class NftCollectionListingsService {
     }
   }
 
-  public async fulfillListing(hash: string, chain: string, fulfillerAddress: string): Promise<ServiceResponse<any>> {
+  public async fulfillListing(hash: string, fulfillerAddress: string, chain?: string): Promise<ServiceResponse<any>> {
     try {
-      const response = await fulfillNftListing(hash, chain, fulfillerAddress);
+      const response = await fulfillNftListing(hash, fulfillerAddress, chain);
       const data = await response.json();
 
       if (!response.ok) {

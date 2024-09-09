@@ -25,7 +25,14 @@ const Main: React.FC<MainProps> = ({ collectionSlug, collectionTraits, collectio
         <Listings collectionSlug={collectionSlug} collectionListings={collectionListings} />
       </div>
       {/* ACTIVITY  */}
-      <div className="min-w-[350px] w-1/5 bg-yellow-400">ACTIVITY</div>
+      <div className="min-w-[350px] w-1/50 border-l border-dark-border">
+        <div className={`px-3 py-6`}>
+          <div className="flex flex-col gap-3 px-3">
+            <h2 className="text-sm tracking-widest">ACTIVITY</h2>
+            <div className="flex flex-col gap-1"></div>
+          </div>
+        </div>
+      </div>
     </main>
   ) : (
     <Listings collectionSlug={collectionSlug} collectionListings={collectionListings} />

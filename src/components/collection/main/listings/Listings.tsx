@@ -21,7 +21,7 @@ type ListingsProps = {
   collectionListings: NftListing[] | null;
 };
 
-const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
+const Listings: React.FC<ListingsProps> = ({ collectionSlug, collectionListings }) => {
   const [selected, setSelected] = useState("items");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
@@ -90,7 +90,14 @@ const Listings: React.FC<ListingsProps> = ({ collectionListings }) => {
                       <Rarity rank={listing.token?.rarity?.rank} distinctNftCount={listing.token?.collection?.distinct_nft_count} />
                     </TableData>
                     <TableData width="15%">
-                      <ListingBuy price={listing.price.value} currency={listing.price.currency} />
+                      <ListingBuy
+                        price={listing.price.value}
+                        currency={listing.price.currency}
+                        hash={listing.order_hash}
+                        collectionSlug={collectionSlug}
+                        contractAddress={listing.token?.contract_address || ""}
+                        chain="ethereum"
+                      />
                     </TableData>
                     <TableData width="12%">
                       <LastSale

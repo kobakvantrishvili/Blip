@@ -1,11 +1,11 @@
-export const fulfillNftListing = async (hash: string, chain: string, fulfillerAddress: string) => {
+export const fulfillNftListing = async (hash: string, fulfillerAddress: string, chain?: string) => {
   const apiKey = process.env.NEXT_PUBLIC_OPENSEA_API_KEY || "";
   const url = `https://api.opensea.io/api/v2/listings/fulfillment_data`;
 
   const body = {
     listing: {
       hash: hash,
-      chain: chain,
+      chain: chain || "ethereum",
       fulfiller: fulfillerAddress,
     },
   };

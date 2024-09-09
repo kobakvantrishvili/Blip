@@ -109,6 +109,7 @@ export type NftTopBid = {
 };
 
 export type NftToken = {
+  contract_address: string;
   token_id: string;
   name: string;
   previews: {

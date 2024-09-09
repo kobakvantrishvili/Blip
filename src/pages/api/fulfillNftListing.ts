@@ -36,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const nftListingsService = new NftCollectionListingsService(collectionSlug, contractAddress);
 
-    const { status, data, error } = await nftListingsService.fulfillListing(hash, chain, fulfillerAddress);
+    const { status, data, error } = await nftListingsService.fulfillListing(hash, fulfillerAddress, chain);
 
     if (status === 200) {
       res.status(200).json(data);
