@@ -1,6 +1,7 @@
 import { NftListing, NftToken } from "@/services/models/types";
 import { fetchNftListings } from "@/services/external/fetchNftListings";
 import { fetchNftTokenList } from "@/services/external/fetchNftTokenList";
+import { fulfillNftListing } from "@/services/external/fulfillNftListing";
 
 interface ServiceResponse<T> {
   status: number;
@@ -126,6 +127,25 @@ class NftCollectionListingsService {
       });
 
       return { status: 200, data: combinedListings };
+    } catch (error) {
+      if (error instanceof Error) {
+        return { status: 500, error: error.message };
+      } else {
+        return { status: 500, error: "An unknown error occurred" };
+      }
+    }
+  }
+
+  public async fulfillListing(hash: string, chain: string, fulfillerAddress: string): Promise<ServiceResponse<any>> {
+    try {
+      const response = await fulfillNftListing(hash, chain, fulfillerAddress);
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { status: response.status, error: data };
+      }
+
+      return { status: 200, data }; // Return the data from the fulfillment response
     } catch (error) {
       if (error instanceof Error) {
         return { status: 500, error: error.message };
