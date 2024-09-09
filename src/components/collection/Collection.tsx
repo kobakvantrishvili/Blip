@@ -11,8 +11,8 @@ import nftCollectionListingsGetter from "@/data/getters/nftCollectionListingsGet
 import { NftCollection, NftCollectionStats, CollectionTraits, NftListing } from "@/services/models/types";
 
 const Collection: React.FC = () => {
-  const collectionSlug = "lilpudgys";
-  const contractAddress = "0x524cab2ec69124574082676e6f654a18df49a048";
+  const collectionSlug = "mutant-ape-yacht-club";
+  const contractAddress = "0x60e4d786628fea6478f785a6d7e704777c86a7c6";
 
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
