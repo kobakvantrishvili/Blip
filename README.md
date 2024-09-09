@@ -10,10 +10,10 @@ Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, 
 ## Features 🚀
 
 - **Next.js & React**: Modern, blazing-fast frontend stack.
-- **TypeScript**: Static typing for reliable code.
-- **Tailwind CSS**: Responsive, utility-first design.
-- **SimpleHash & OpenSea APIs**: NFT data and insights.
-- **Web3Modal & Wagmi**: Wallet connection made easy.
+- **TypeScript**: Strong static typing for more reliable and maintainable code.
+- **Tailwind CSS**: Responsive, utility-first design system.
+- **SimpleHash & OpenSea APIs**: Real-time NFT data and insights, updated instantly via WebSocket.
+- **Web3Modal & Wagmi**: Simplified wallet connection and integration.
 
 ## Tech Stack 🛠️
 
@@ -21,6 +21,7 @@ Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, 
 - **APIs**: SimpleHash, OpenSea
 - **Web3**: Web3Modal, Wagmi
 - **Styling**: Tailwind CSS
+- **Storage**: AWS DynamoDB
 
 ## Getting Started 💻
 
