@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Blip 🟦
 
-## Getting Started
+Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, and **Tailwind CSS**. It provides a slick, high-performance NFT marketplace experience, leveraging the power of **SimpleHash** and **OpenSea APIs** for NFT data, and **Web3Modal** with **Wagmi** for seamless wallet connections.
 
-First, run the development server:
+🔥 Check out the original **Blur.io** collection for **Pudgy Penguins** [here](https://blur.io/collection/pudgypenguins) to see where the inspiration came from!
+
+---
+
+
+## Features 🚀
+
+- **Next.js & React**: Modern, blazing-fast frontend stack.
+- **TypeScript**: Static typing for reliable code.
+- **Tailwind CSS**: Responsive, utility-first design.
+- **SimpleHash & OpenSea APIs**: NFT data and insights.
+- **Web3Modal & Wagmi**: Wallet connection made easy.
+
+## Tech Stack 🛠️
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **APIs**: SimpleHash, OpenSea
+- **Web3**: Web3Modal, Wagmi
+- **Styling**: Tailwind CSS
+
+## Getting Started 💻
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/your-username/blip
+   cd blip
+   ```
+3. Clone the repo:
+  ```bash
+    npm install
+  ```
+3. Run the development server:
 
 ```bash
+Copy code
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+4. Open http://localhost:3000 in your browser to see your Blip clone live!
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Wallet Integration 💰
+Blip allows users to connect their wallet seamlessly using Web3Modal and Wagmi, bringing NFTs and DeFi to the fingertips of users.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Screenshots 📸
+![image](https://github.com/user-attachments/assets/e66fe080-a610-490a-8c91-dda25efa1f59)
 
-## Learn More
+![image](https://github.com/user-attachments/assets/b8a787a3-6b6a-4de7-b488-02858c56f2f1)
 
-To learn more about Next.js, take a look at the following resources:
+![image](https://github.com/user-attachments/assets/46b1370a-e8d8-46d5-9ffd-4fa977186403)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![image](https://github.com/user-attachments/assets/ac4ded63-6dd3-4e1c-8b29-2a56c2938b3e)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
