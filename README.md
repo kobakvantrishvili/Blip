@@ -6,7 +6,6 @@ Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, 
 
 ---
 
-
 ## Features 🚀
 
 - **Next.js & React**: Modern, blazing-fast frontend stack.
@@ -31,9 +30,9 @@ Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, 
    cd blip
    ```
 2. Install Dependencies:
-     ```bash
-     npm install
-     ```
+   ```bash
+   npm install
+   ```
 3. Run the development server:
    ```bash
    Copy code
@@ -42,18 +41,13 @@ Blip is a **Blur.io** clone built using **Next.js**, **React**, **TypeScript**, 
 4. Open http://localhost:3000 in your browser to see your Blip clone live!
 
 ## Wallet Integration 💰
+
 Blip allows users to connect their wallet seamlessly using Web3Modal and Wagmi, bringing NFTs and DeFi to the fingertips of users.
 
-
 ## Screenshots 📸
+
 ![image](https://github.com/user-attachments/assets/e66fe080-a610-490a-8c91-dda25efa1f59)
 
 ![image](https://github.com/user-attachments/assets/b8a787a3-6b6a-4de7-b488-02858c56f2f1)
 
 ![image](https://github.com/user-attachments/assets/46b1370a-e8d8-46d5-9ffd-4fa977186403)
-
-![image](https://github.com/user-attachments/assets/ac4ded63-6dd3-4e1c-8b29-2a56c2938b3e)
-
-
-
-
