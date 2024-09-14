@@ -81,7 +81,7 @@ const Listings: React.FC<ListingsProps> = ({ collectionSlug, collectionListings 
                     <TableData width="25%" className="text-start py-1">
                       <ListingTitle
                         tokenImageUrl={listing.token?.previews.image_small_url || ""}
-                        tokenName={listing.token?.name || "Pudgy"}
+                        tokenName={listing.token?.name || ""}
                         isChecked={checkedItems[listing.order_hash] || false}
                         onToggleCheck={() => toggleCheck(listing.order_hash)}
                       />
