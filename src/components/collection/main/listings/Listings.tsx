@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "@/components/shared/SearchBar";
 import { FiLayers } from "react-icons/fi";
 import { PiGavel } from "react-icons/pi";
@@ -25,6 +25,8 @@ type ListingsProps = {
 const Listings: React.FC<ListingsProps> = ({ collectionSlug, collectionListings, isLoading }) => {
   const [selected, setSelected] = useState("items");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [delayedLoading, setDelayedLoading] = useState(true);
+  const [displayedListings, setDisplayedListings] = useState<NftListing[] | null>(null);
 
   const toggleCheck = (id: string) => {
     setCheckedItems((prev) => ({
@@ -36,6 +38,18 @@ const Listings: React.FC<ListingsProps> = ({ collectionSlug, collectionListings,
   const handleTabSelection = (tab: string) => {
     setSelected(tab);
   };
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timeout = setTimeout(() => {
+        setDisplayedListings(collectionListings);
+        setDelayedLoading(false);
+      }, 300);
+      return () => clearTimeout(timeout);
+    } else {
+      setDelayedLoading(true);
+    }
+  }, [isLoading, collectionListings]);
 
   return (
     <div className="h-full w-full px-6 py-6">
@@ -73,55 +87,51 @@ const Listings: React.FC<ListingsProps> = ({ collectionSlug, collectionListings,
                 </tr>
                 <tr className="absolute inset-x-0 bottom-0 border-t border-dark-border"></tr>
               </thead>
-              <tbody>
-                {!isLoading && (
-                  <>
-                    <tr className="h-2">
-                      <td colSpan={7}></td>
-                    </tr>
-                    {collectionListings?.map((listing) => (
-                      <tr key={listing.order_hash}>
-                        <TableData width="25%" className="text-start py-1">
-                          <ListingTitle
-                            tokenImageUrl={listing.token?.previews.image_small_url || ""}
-                            tokenName={listing.token?.name || ""}
-                            isChecked={checkedItems[listing.order_hash] || false}
-                            onToggleCheck={() => toggleCheck(listing.order_hash)}
-                          />
-                        </TableData>
-                        <TableData width="12%">
-                          <Rarity rank={listing.token?.rarity?.rank} distinctNftCount={listing.token?.collection?.distinct_nft_count} />
-                        </TableData>
-                        <TableData width="15%">
-                          <ListingBuy
-                            price={listing.price.value}
-                            currency={listing.price.currency}
-                            hash={listing.order_hash}
-                            collectionSlug={collectionSlug}
-                            contractAddress={listing.token?.contract_address || ""}
-                            chain="ethereum"
-                          />
-                        </TableData>
-                        <TableData width="12%">
-                          <LastSale
-                            unitPrice={listing.token?.last_sale?.unit_price}
-                            paymentTokenSymbol={listing.token?.last_sale?.payment_token?.symbol}
-                            decimals={listing.token?.last_sale?.payment_token?.decimals}
-                          />
-                        </TableData>
-                        <TableData width="12%">
-                          <Owner address={listing.offerer} />
-                        </TableData>
-                        <TableData width="12%">
-                          {listing.token?.owners[0]?.last_acquired_date
-                            ? formatTimePast(Math.floor(new Date(listing.token.owners[0].last_acquired_date).getTime() / 1000).toString())
-                            : "—"}
-                        </TableData>
-                        <TableData width="12%">{`${formatTimePast(listing.startTime)} ago`}</TableData>
-                      </tr>
-                    ))}
-                  </>
-                )}
+              <tbody className={`${delayedLoading ? "blur" : ""}`}>
+                <tr className="h-2">
+                  <td colSpan={7}></td>
+                </tr>
+                {displayedListings?.map((listing) => (
+                  <tr key={listing.order_hash}>
+                    <TableData width="25%" className="text-start py-1">
+                      <ListingTitle
+                        tokenImageUrl={listing.token?.previews.image_small_url || ""}
+                        tokenName={listing.token?.name || ""}
+                        isChecked={checkedItems[listing.order_hash] || false}
+                        onToggleCheck={() => toggleCheck(listing.order_hash)}
+                      />
+                    </TableData>
+                    <TableData width="12%">
+                      <Rarity rank={listing.token?.rarity?.rank} distinctNftCount={listing.token?.collection?.distinct_nft_count} />
+                    </TableData>
+                    <TableData width="15%">
+                      <ListingBuy
+                        price={listing.price.value}
+                        currency={listing.price.currency}
+                        hash={listing.order_hash}
+                        collectionSlug={collectionSlug}
+                        contractAddress={listing.token?.contract_address || ""}
+                        chain="ethereum"
+                      />
+                    </TableData>
+                    <TableData width="12%">
+                      <LastSale
+                        unitPrice={listing.token?.last_sale?.unit_price}
+                        paymentTokenSymbol={listing.token?.last_sale?.payment_token?.symbol}
+                        decimals={listing.token?.last_sale?.payment_token?.decimals}
+                      />
+                    </TableData>
+                    <TableData width="12%">
+                      <Owner address={listing.offerer} />
+                    </TableData>
+                    <TableData width="12%">
+                      {listing.token?.owners[0]?.last_acquired_date
+                        ? formatTimePast(Math.floor(new Date(listing.token.owners[0].last_acquired_date).getTime() / 1000).toString())
+                        : "—"}
+                    </TableData>
+                    <TableData width="12%">{`${formatTimePast(listing.startTime)} ago`}</TableData>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
