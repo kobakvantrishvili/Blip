@@ -22,7 +22,7 @@ const Main: React.FC<MainProps> = ({ collectionSlug, collectionTraits, collectio
       <LeftPanel collectionTraits={collectionTraits} error={error} isLoading={isLoading} />
       {/* LISTINGS  */}
       <div className="flex flex-1 overflow-x-auto">
-        <Listings collectionSlug={collectionSlug} collectionListings={collectionListings} />
+        <Listings collectionSlug={collectionSlug} collectionListings={collectionListings} isLoading={isLoading} />
       </div>
       {/* ACTIVITY  */}
       <div className="min-w-[350px] w-1/50 border-l border-dark-border">
@@ -35,7 +35,7 @@ const Main: React.FC<MainProps> = ({ collectionSlug, collectionTraits, collectio
       </div>
     </main>
   ) : (
-    <Listings collectionSlug={collectionSlug} collectionListings={collectionListings} />
+    <Listings collectionSlug={collectionSlug} collectionListings={collectionListings} isLoading={isLoading} />
   );
 };
 

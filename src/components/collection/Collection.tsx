@@ -10,10 +10,14 @@ import nftCollectionTraitsGetter from "@/data/getters/nftCollectionTraitsGetter"
 import nftCollectionListingsGetter from "@/data/getters/nftCollectionListingsGetter";
 import { NftCollection, NftCollectionStats, CollectionTraits, NftListing } from "@/services/models/types";
 
-const Collection: React.FC = () => {
-  const collectionSlug = "mutant-ape-yacht-club";
-  const contractAddress = "0x60e4d786628fea6478f785a6d7e704777c86a7c6";
+interface CollectionProps {
+  searchQuery: string; // Receive search query from Page.tsx
+}
 
+const Collection: React.FC<CollectionProps> = ({ searchQuery }) => {
+  //const collectionSlug = "mutant-ape-yacht-club";
+  const [collectionSlug, setCollectionSlug] = useState("");
+  const [contractAddress, setContractAddress] = useState("");
   const [collection, setCollection] = useState<NftCollection | null>(null);
   const [collectionStats, setCollectionStats] = useState<NftCollectionStats | null>(null);
   const [collectionTopBid, setCollectionTopBid] = useState<number | null>(null);
@@ -29,17 +33,45 @@ const Collection: React.FC = () => {
   }
 
   useEffect(() => {
+    if (searchQuery) {
+      setCollectionSlug(searchQuery.trim());
+      setIsLoading(true);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!collectionSlug) return;
+
     const fetchData = async () => {
       try {
-        const [collectionData, collectionStatsData, collectionTopBidData, collectionTraitsData, collectionListingsData] = await Promise.all([
-          nftCollectionGetter(collectionSlug),
+        const collectionData = await nftCollectionGetter(collectionSlug);
+        setCollection(collectionData);
+
+        if (collectionData?.contracts?.length > 0) {
+          setContractAddress(collectionData.contracts[0].address);
+        } else {
+          setContractAddress("");
+        }
+      } catch (error) {
+        console.error("Error fetching NFT data:", error);
+        setError("Failed to fetch NFT Collection data. Please try again later.");
+      }
+    };
+
+    fetchData();
+  }, [collectionSlug]);
+
+  useEffect(() => {
+    if (!collectionSlug) return;
+    const fetchData = async () => {
+      try {
+        const [collectionStatsData, collectionTopBidData, collectionTraitsData, collectionListingsData] = await Promise.all([
           nftCollectionStatsGetter(collectionSlug),
           nftCollectionTopBidGetter(collectionSlug),
           nftCollectionTraitsGetter(collectionSlug),
           nftCollectionListingsGetter(collectionSlug, contractAddress, "50", OrderType.BUY_NOW),
         ]);
 
-        setCollection(collectionData);
         setCollectionStats(collectionStatsData);
         setCollectionTopBid(collectionTopBidData);
         setCollectionTraits(collectionTraitsData);
@@ -55,7 +87,7 @@ const Collection: React.FC = () => {
     };
 
     fetchData();
-  }, [collectionSlug]);
+  }, [collectionSlug, contractAddress]);
 
   return (
     <div className="h-full">

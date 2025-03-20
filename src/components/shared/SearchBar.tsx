@@ -8,9 +8,10 @@ interface SearchBarProps {
   placeholder?: string;
   iconSize?: string;
   icon?: IconType;
+  onSearchSubmit?: (value: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder, iconSize, icon: Icon }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder, iconSize, icon: Icon, onSearchSubmit }) => {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -20,6 +21,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder,
 
   const handleFocusInput = () => {
     inputRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && onSearchSubmit) {
+      onSearchSubmit(inputValue); // Submit search value only on Enter
+    }
   };
 
   return (
@@ -33,6 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder,
         placeholder={placeholder}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleKeyDown}
         className={`bg-dark-bg text-text-primary placeholder-text-tertiary focus:outline-none flex-grow ${barWidth}`}
       />
       {Icon && (

@@ -19,7 +19,7 @@ const Rarity: React.FC<RarityProps> = ({ rank, distinctNftCount }) => {
     color = "text-primary-accent text-shadow-custom"; // Top 10%
   }
 
-  return <span className={color}>{rank.toLocaleString()}</span>;
+  return <span className={color}>{rank?.toLocaleString()}</span>;
 };
 
 export default Rarity;

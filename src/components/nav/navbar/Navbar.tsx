@@ -21,9 +21,10 @@ type NavbarProps = {
   setIsMenuToggled: React.Dispatch<React.SetStateAction<boolean>>;
   isCopied: boolean;
   setIsCopied: React.Dispatch<React.SetStateAction<boolean>>;
+  onSearchSubmit: (query: string) => void;
 };
 
-const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopied, setIsCopied }) => {
+const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopied, setIsCopied, onSearchSubmit }) => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const isAboveLargeScreens = useMediaQuery("(min-width: 1024px)");
 
@@ -85,6 +86,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuToggled, setIsMenuToggled, isCopi
             barWidth="w-56 min-w-20"
             placeholder="Collections, wallets, or ENS"
             icon={FiX}
+            onSearchSubmit={onSearchSubmit}
           />
         )}
         {!isAboveMediumScreens && (
