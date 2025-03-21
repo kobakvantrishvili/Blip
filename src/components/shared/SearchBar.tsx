@@ -26,6 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, barWidth, placeholder,
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && onSearchSubmit) {
       onSearchSubmit(inputValue); // Submit search value only on Enter
+      setInputValue("");
     }
   };
 
